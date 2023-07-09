@@ -1,52 +1,40 @@
 import { useState } from 'react';
 import BaseInput from '../../components/BaseInput';
-import { Container } from './style';
 import validationRules from './../../utils/validationRules';
-import BaseCombobox from '../../components/BaseCombobox';
+import { Row, Col, Container } from 'react-grid-system';
 
 export default function Home() {
-  const [email, setImail] = useState('elvishugeshotmail.com');
-  const [cargo, setCargo] = useState('');
+  const [email, setImail] = useState('');
+  const [name, setName] = useState('');
 
   interface SelectItem {
     id: string;
     text: string;
   }
 
-  const items: SelectItem[] = [
-    {
-      id: 'vsertbyui',
-      text: 'Smartphone',
-    },
-    {
-      id: 'ertersvert',
-      text: 'Mochila',
-    },
-  ];
-
-  const rulesInput = [
-    validationRules.validateName,
-    validationRules.validateEmail,
-  ];
-  const rulesCombo = [validationRules.validateName];
+  const rulesInput = [validationRules.validateName];
 
   return (
     <Container>
-      <div>
-        <BaseInput
-          value={email}
-          validationRules={rulesInput}
-          onChange={(e) => setImail(e.target.value)}
-          placeholder='Email'
-        />
-      </div>
-      <div>
-        <BaseCombobox
-          items={items}
-          validationRules={rulesCombo}
-          placeholder='Cargo'
-        />
-      </div>
+      {' '}
+      <Row>
+        <Col sm={6}>
+          <BaseInput
+            value={email}
+            validationRules={rulesInput}
+            onChange={(e) => setImail(e.target.value)}
+            placeholder='Email'
+          />
+        </Col>
+        <Col sm={6}>
+          <BaseInput
+            value={name}
+            validationRules={rulesInput}
+            onChange={(e) => setName(e.target.value)}
+            placeholder='Nome'
+          />
+        </Col>
+      </Row>{' '}
     </Container>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ContainerInput, StyledBaseInput, Container } from './style';
+import { ContainerInput, Input, Container } from './style';
 
 interface PropsBaseInput {
   name?: string;
@@ -77,7 +77,7 @@ const BaseInput: React.FC<PropsBaseInput> = ({
         <label className={active || value != '' ? 'active' : ''}>
           {placeholder}
         </label>
-        <StyledBaseInput
+        <Input
           className={`${error ? 'error' : ''}`}
           type='text'
           name={name}

@@ -1,28 +1,29 @@
 import styled from 'styled-components';
 
-interface StyledBaseInputProps {
-  borderRadius?: string;
-  readOnly?: boolean;
+interface ContainerProps {
+  active?: boolean;
 }
-interface StyledContainerInputProps {
+interface ContainerInputProps {
   borderRadius?: string;
   active?: string;
 }
-interface StyledContainerProps {
-  active?: boolean;
+interface InputProps {
+  borderRadius?: string;
+  readOnly?: boolean;
 }
 
-export const Container = styled.div<StyledContainerProps>`
+export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 80px;
   .error-message {
     color: red;
     font-size: 0.8rem !important;
   }
 `;
 
-export const ContainerInput = styled.div<StyledContainerInputProps>`
+export const ContainerInput = styled.div<ContainerInputProps>`
   font-family: 'Arial';
   display: flex;
   background-color: #f5f5f5;
@@ -38,7 +39,7 @@ export const ContainerInput = styled.div<StyledContainerInputProps>`
     border-bottom: 2px solid;
   }
   &.error {
-    border-bottom-color: green !important;
+    border-bottom-color: red !important;
   }
   label {
     margin-left: 5px;
@@ -57,7 +58,7 @@ export const ContainerInput = styled.div<StyledContainerInputProps>`
   }
 `;
 
-export const StyledBaseInput = styled.input<StyledBaseInputProps>`
+export const Input = styled.input<InputProps>`
   color: palevioletred;
   background-color: #f5f5f5;
   border: 0;
