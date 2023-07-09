@@ -6,12 +6,13 @@ interface PropsBaseInput {
   value?: string | number | undefined;
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  label?: string;
   borderRadius?: string;
   readonly?: boolean;
   onChangeActive?: (e: boolean) => void;
   onClick?: () => void;
   validationRules: ((value: string) => boolean | string)[];
+  setHasError?: (value: boolean) => void;
+  type: string;
 }
 
 const BaseInput: React.FC<PropsBaseInput> = ({
@@ -19,12 +20,13 @@ const BaseInput: React.FC<PropsBaseInput> = ({
   value,
   placeholder,
   onChange,
-  label,
   borderRadius,
   readonly,
   onChangeActive,
   onClick,
   validationRules,
+  setHasError,
+  type,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange && !readonly) {
@@ -49,10 +51,19 @@ const BaseInput: React.FC<PropsBaseInput> = ({
         if (typeof validationResult === 'string') {
           setErrorText(validationResult);
           errorFound = true;
+
+          if (setHasError) {
+            console.log('222', errorFound);
+
+            setHasError(errorFound);
+          }
           break;
         }
       }
       if (!errorFound) {
+        if (setHasError) {
+          setHasError(errorFound);
+        }
         setErrorText('');
       }
     }
@@ -79,7 +90,7 @@ const BaseInput: React.FC<PropsBaseInput> = ({
         </label>
         <Input
           className={`${error ? 'error' : ''}`}
-          type='text'
+          type={type}
           name={name}
           onChange={(e: any) => handleChange(e)}
           value={value}
