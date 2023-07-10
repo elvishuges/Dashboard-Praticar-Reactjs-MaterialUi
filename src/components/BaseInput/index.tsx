@@ -10,100 +10,77 @@ interface PropsBaseInput {
   readonly?: boolean;
   onChangeActive?: (e: boolean) => void;
   onClick?: () => void;
-  validationRules: ((value: string) => boolean | string)[];
+  error?: any | '';
   setHasError?: (value: boolean) => void;
-  type: string;
 }
 
-const BaseInput: React.FC<PropsBaseInput> = ({
-  name,
-  value,
-  placeholder,
-  onChange,
-  borderRadius,
-  readonly,
-  onChangeActive,
-  onClick,
-  validationRules,
-  setHasError,
-  type,
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onChange && !readonly) {
-      onChange(e);
-      setLocalValue(e.target.value);
-    }
-  };
-  const handleSetActive = (active: boolean) => {
-    setActive(active);
-    if (onChangeActive) {
-      onChangeActive(active);
-    }
-  };
-  const handleOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setActive(false);
-    let errorFound = false;
-
-    if (validationRules) {
-      for (let i = 0; i < validationRules.length; i++) {
-        const validationResult = validationRules[i](e.target.value);
-
-        if (typeof validationResult === 'string') {
-          setErrorText(validationResult);
-          errorFound = true;
-
-          if (setHasError) {
-            console.log('222', errorFound);
-
-            setHasError(errorFound);
-          }
-          break;
-        }
+const BaseInput = React.forwardRef<HTMLInputElement, PropsBaseInput>(
+  (
+    {
+      name,
+      value,
+      onChange,
+      onChangeActive,
+      placeholder,
+      readonly,
+      setHasError,
+      onClick,
+      borderRadius,
+      error,
+      ...rest
+    }: PropsBaseInput,
+    ref
+  ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange && !readonly) {
+        onChange(e);
       }
-      if (!errorFound) {
-        if (setHasError) {
-          setHasError(errorFound);
-        }
-        setErrorText('');
+    };
+    const handleSetActive = (active: boolean) => {
+      setActive(active);
+      if (onChangeActive) {
+        onChangeActive(active);
       }
-    }
-  };
-  const handleOnclick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
+    };
+    const handleOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setActive(false);
+    };
+    const handleOnclick = () => {
+      if (onClick) {
+        onClick();
+      }
+    };
 
-  const [active, setActive] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
-  const [localValue, setLocalValue] = useState('');
+    const [active, setActive] = useState(false);
 
-  return (
-    <Container>
-      <ContainerInput
-        active={active ? 'active' : ''}
-        className={error ? 'error' : ''}
-      >
-        <label className={active || value != '' ? 'active' : ''}>
-          {placeholder}
-        </label>
-        <Input
-          className={`${error ? 'error' : ''}`}
-          type={type}
-          name={name}
-          onChange={(e: any) => handleChange(e)}
-          value={value}
-          borderRadius={borderRadius}
-          onFocus={() => handleSetActive(true)}
+    return (
+      <Container>
+        <ContainerInput
+          active={active ? 'active' : ''}
+          className={error ? 'error' : ''}
           onBlur={(e: any) => handleOnBlur(e)}
-          onClick={handleOnclick}
-          readOnly={readonly}
-        />
-      </ContainerInput>
-      <div className='error-message'>{errorText}</div>
-    </Container>
-  );
-};
+        >
+          <label className={active || value !== '' ? 'active' : ''}>
+            {placeholder}
+          </label>
+          <Input
+            name={name}
+            className={`${error ? 'error' : ''}`}
+            type='text'
+            onChange={(e: any) => handleChange(e)}
+            ref={ref}
+            value={value}
+            borderRadius={borderRadius}
+            onFocus={() => handleSetActive(true)}
+            onClick={handleOnclick}
+            readOnly={readonly}
+            {...rest}
+          />
+        </ContainerInput>
+        {error && <div className='error-message'>{error.message}</div>}
+      </Container>
+    );
+  }
+);
 
 export default BaseInput;
