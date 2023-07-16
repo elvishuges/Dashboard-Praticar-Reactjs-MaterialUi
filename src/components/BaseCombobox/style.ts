@@ -40,6 +40,10 @@ export const ContainerCombobox = styled.div<ContainerComboboxProps>`
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 
+  .html-select {
+    display: none;
+  }
+
   label {
     margin-left: 8px;
     font-size: 16px;
@@ -112,4 +116,50 @@ export const ContainerComboboxItem = styled.li`
   color: #4c4c4c;
   font-size: 15px;
   font-weight: 400;
+`;
+
+export const ContainerCustomSelect = styled.div`
+  position: relative;
+  user-select: none;
+  width: 80%;
+
+  .custom-select {
+    padding-right: 8px;
+    background: ${(props) => props.theme.white};
+    position: relative;
+    cursor: pointer;
+    color: ${(props) => props.theme.grey3};
+  }
+  .custom-select__trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  .custom-options {
+    position: absolute;
+    display: block;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: ${(props) => props.theme.white};
+    transition: all 0.5s;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 2;
+    padding: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .custom-select.open .custom-options {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+    margin-top: 8px;
+    box-shadow: -1px 1px 2px rgba(67, 70, 74, 0.0001),
+      -2px 2px 5px rgba(67, 86, 100, 0.123689);
+    border-radius: 8px;
+  }
 `;

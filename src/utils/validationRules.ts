@@ -1,15 +1,8 @@
-const validateName = (value: string | number) => {
-  if (value) return true;
-  return 'Campo Obrigatório';
-};
-
-const validateEmail = (value: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (emailRegex.test(value)) return true;
-  return 'Email Inválido';
+const emailPattern = {
+  value: new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$', 'ig'),
+  message: 'Digite um email válido',
 };
 
 export default {
-  validateName,
-  validateEmail,
+  emailPattern,
 };

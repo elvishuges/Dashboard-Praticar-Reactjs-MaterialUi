@@ -1,5 +1,13 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
+const jump = keyframes`
+  from{
+    transform: translateY(0)
+  }
+  to{
+    transform: translateY(-3px)
+  }
+`;
 interface BaseButtonContainerProps {
   color?: string;
   borderRadius?: string;
@@ -19,4 +27,8 @@ export const BaseButtonContainer = styled.button<BaseButtonContainerProps>`
   font-size: ${(props) => props.fontSize || '16px'};
   width: 100%;
   cursor: pointer;
+  :hover {
+    background: rgb(200, 50, 70);
+    animation: ${jump} 0.2s ease-out forwards;
+  }
 `;

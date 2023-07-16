@@ -1,145 +1,131 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Container,
   ContainerCombobox,
   ContainerComboboxInput,
   ContainerComboboxList,
   ContainerComboboxItem,
+  ContainerCustomSelect,
 } from './style';
+import useOutsideClick from '../../hooks/useOutSideClick';
 
-interface ComboboxItem {
-  text: string;
-  id: string | number;
-}
+type Option = {
+  value: string;
+  label: string;
+};
 
 interface PropsBaseCombobox {
-  name?: string;
+  name: string;
   value?: string | number | undefined;
   placeholder?: string;
-  onChange: (e: any | undefined) => void;
   label?: string;
   borderRadius?: string;
   readonly?: boolean;
   onChangeActive?: (e: boolean) => void;
   onClick?: () => void;
-  validationRules: ((value: string) => boolean | string)[];
-  items: Array<ComboboxItem>;
+  onItemSelected: (e: any) => void;
+
+  error?: any | '';
+  selectProps: object;
+  options: Option[];
 }
 
-const BaseCombobox: React.FC<PropsBaseCombobox> = ({
-  name,
-  value,
-  placeholder,
-  onChange,
-  borderRadius,
-  readonly,
-  onChangeActive,
-  onClick,
-  validationRules,
-  items,
-}) => {
-  const [active, setActive] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [error, setError] = useState(false);
-  const [errorText, setErrorText] = useState('');
-  const [isOpenList, setIsOpenList] = useState(false);
+const BaseCombobox = React.forwardRef<HTMLSelectElement, PropsBaseCombobox>(
+  (
+    {
+      name,
+      value,
+      placeholder,
+      options,
+      error,
+      selectProps,
+      onItemSelected,
+      ...rest
+    }: PropsBaseCombobox,
+    ref
+  ) => {
+    const [isOpen, setOpen] = useState(false);
+    const [selected, setSelected] = useState(value);
+    const selectRef = useRef(null);
 
-  useEffect(() => {
-    // Função a ser chamada ao montar o componente
-    if (value) {
-      handleComboboxItemClick(value);
-    }
-  }, []);
+    useOutsideClick(selectRef, () => {
+      setOpen(false);
+    });
 
-  useEffect(() => {
-    document.addEventListener('click', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
+    const handleItemClick = (value: string | number | undefined) => {
+      onItemSelected(value);
+      setSelected(value);
     };
-  }, [isOpenList]);
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    const target = event.target as Element;
-    if (isOpenList && !target?.closest('.container-base-combobox')) {
-      setIsOpenList(false);
-    }
-  };
-
-  const handleSetActive = (active: boolean) => {
-    setActive(active);
-    if (onChangeActive) {
-      onChangeActive(active);
-    }
-    setIsOpenList(true);
-  };
-
-  const handleOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setActive(false);
-    if (validationRules) {
-      validateErros();
-    }
-  };
-
-  const validateErros = () => {
-    let errorFound = false;
-
-    for (let i = 0; i < validationRules.length; i++) {
-      const validationResult = validationRules[i](inputValue);
-
-      if (typeof validationResult === 'string') {
-        setErrorText(validationResult);
-        errorFound = true;
-        break;
+    useEffect(() => {
+      const element = document.getElementById(name);
+      console.log('element', element);
+      if (element) {
+        (element as HTMLSelectElement).value = selected as string;
       }
-    }
-    if (!errorFound) {
-      setErrorText('');
-    }
-  };
+    }, [selected]);
 
-  const handleComboboxItemClick = (id: string | number) => {
-    const clickedItem = items.find((item) => item.id === id);
-    if (clickedItem) {
-      setErrorText('');
-      setInputValue(clickedItem?.text);
-      setIsOpenList(false);
-      onChange(clickedItem.id);
-    }
-  };
-
-  return (
-    <Container className='container-base-combobox'>
-      <ContainerCombobox>
-        <label className={active || inputValue != '' ? 'active' : ''}>
-          {placeholder}
-        </label>
-        <ContainerComboboxInput
-          name={name}
-          value={inputValue}
-          borderRadius={borderRadius}
-          onFocus={() => handleSetActive(true)}
-          onBlur={(e: any) => handleOnBlur(e)}
-          onChange={(e: any) => {}}
-          readOnly={readonly}
-        />
-
-        <ContainerComboboxList className={active ? 'active' : ''}>
-          {' '}
-          {isOpenList &&
-            items.map((item, id) => (
-              <ContainerComboboxItem
-                key={id}
-                onClick={() => handleComboboxItemClick(item.id)}
-              >
-                {item.text}
-              </ContainerComboboxItem>
+    return (
+      <Container className='container-base-combobox'>
+        <ContainerCombobox>
+          <label className={isOpen || value != '' ? 'active' : ''}>
+            {placeholder}
+          </label>
+          <select
+            ref={ref}
+            value={selected}
+            id={name}
+            name={name}
+            className='html-select'
+            {...rest}
+          >
+            {options.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
             ))}
-        </ContainerComboboxList>
-      </ContainerCombobox>
-      <div className='error-message'>{errorText}</div>
-    </Container>
-  );
-};
-
+          </select>
+          <ContainerCustomSelect
+            ref={selectRef}
+            onClick={() => {
+              setOpen((prev) => !prev);
+            }}
+          >
+            {selected}
+            <div className={`custom-select ${isOpen && 'open'}`}>
+              <div className='custom-select__trigger'>
+                <span>
+                  {options.find((item) => item.value === selected)?.label ||
+                    'Select'}
+                </span>
+                <div className='arrow'></div>
+              </div>
+              <div className='custom-options'>
+                {options.map((item) => (
+                  <div
+                    key={item.value}
+                    onClick={() => {
+                      handleItemClick(item.value);
+                    }}
+                    className='option-container'
+                  >
+                    <span
+                      className={`custom-option ${
+                        selected === item.value && 'selected'
+                      } `}
+                      data-value={item.value}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </ContainerCustomSelect>
+        </ContainerCombobox>
+        {error && <div className='error-message'>{error.message}</div>}
+      </Container>
+    );
+  }
+);
 export default BaseCombobox;
