@@ -16,7 +16,7 @@ interface BaseButtonContainerProps {
 }
 
 export const BaseButtonContainer = styled.button<BaseButtonContainerProps>`
-  background-color: ${(props) => props.color || '#4caf50'};
+  background-color: ${(props) => props.color || '#EE5684'};
   border: 8px;
   border-radius: ${(props) => props.borderRadius || '5px'};
   color: white;
@@ -27,8 +27,7 @@ export const BaseButtonContainer = styled.button<BaseButtonContainerProps>`
   font-size: ${(props) => props.fontSize || '16px'};
   width: 100%;
   cursor: pointer;
-  :hover {
-    background: rgb(200, 50, 70);
+  &:hover {
     animation: ${jump} 0.2s ease-out forwards;
   }
 `;

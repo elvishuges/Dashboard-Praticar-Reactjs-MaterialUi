@@ -7,6 +7,7 @@ interface PropsBaseButton {
   padding?: string;
   fontSize?: string;
   type: 'button' | 'submit' | 'reset' | undefined;
+  loading?: boolean;
   onButtonClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -18,6 +19,7 @@ const BaseButton: React.FC<PropsBaseButton> = ({
   padding,
   fontSize,
   onButtonClick,
+  loading,
 }) => {
   return (
     <BaseButtonContainer
@@ -27,8 +29,9 @@ const BaseButton: React.FC<PropsBaseButton> = ({
       fontSize={fontSize}
       type={type}
       onClick={onButtonClick}
+      disabled={loading}
     >
-      {text}
+      {loading ? 'Carregando...' : text}
     </BaseButtonContainer>
   );
 };

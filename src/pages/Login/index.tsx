@@ -5,6 +5,8 @@ import { Col, Row } from 'react-grid-system';
 import BaseInput from '../../components/BaseInput';
 import BaseButton from '../../components/BaseButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useAuth } from '../../hooks/auth';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 type FormInputs = {
   email: string;
@@ -18,16 +20,29 @@ export default function Login() {
     formState: { errors },
   } = useForm<FormInputs>({ mode: 'onBlur' });
 
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [alertMessage, setAlertMessagte] = useState('');
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log('submitting...', data, email);
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    try {
+      setIsLoading(true);
+      setAlertMessagte('');
+      await login(data.email, data.password);
+      navigate('/');
+    } catch (error) {
+      setAlertMessagte('Email ou Senha inválidos');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <Container>
-      <BaseCard>
+      <BaseCard title='Sign Up'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <BaseInput
             {...register('email', {
@@ -52,7 +67,8 @@ export default function Login() {
             placeholder='Password'
             error={errors.password}
           ></BaseInput>
-          <BaseButton type='submit' text='Submit' />
+          <BaseButton loading={isLoading} type='submit' text='Submit' />
+          {alertMessage && <div className='error_message'> {alertMessage}</div>}
         </form>
       </BaseCard>
     </Container>
