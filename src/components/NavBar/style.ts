@@ -6,7 +6,7 @@ export const NavbarContainer = styled.div`
   justify-content: space-between;
   background-color: #f0f0f0;
   padding: 10px 20px;
-  background-color: #6d9ac4;
+  background-color: #222222;
   color: #f0f0f0;
   .button-logout {
     width: 100px;
@@ -15,7 +15,7 @@ export const NavbarContainer = styled.div`
 
 export const Title = styled.h1`
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
 `;
 
 export const LogoutButton = styled.button`

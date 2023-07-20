@@ -10,16 +10,17 @@ const jump = keyframes`
 `;
 interface BaseButtonContainerProps {
   color?: string;
+  backgroundColor?: string;
   borderRadius?: string;
   padding?: string;
   fontSize?: string;
 }
 
 export const BaseButtonContainer = styled.button<BaseButtonContainerProps>`
-  background-color: ${(props) => props.color || '#EE5684'};
+  background-color: ${(props) => props.backgroundColor || '#EE5684'};
   border: 8px;
   border-radius: ${(props) => props.borderRadius || '5px'};
-  color: white;
+  color: ${(props) => props.color || '#F2F2F2'};
   padding: ${(props) => props.padding || '14px'};
   text-align: center;
   text-decoration: none;

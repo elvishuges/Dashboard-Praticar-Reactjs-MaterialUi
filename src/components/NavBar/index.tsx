@@ -17,7 +17,12 @@ const Navbar = () => {
     <NavbarContainer>
       <Title>Change My Mind</Title>
       <div className='button-logout'>
-        <BaseButton type='button' text='Logout' onButtonClick={handleLogout} />
+        <BaseButton
+          type='button'
+          text='Logout'
+          backgroundColor='#222222'
+          onButtonClick={handleLogout}
+        />
       </div>
     </NavbarContainer>
   );

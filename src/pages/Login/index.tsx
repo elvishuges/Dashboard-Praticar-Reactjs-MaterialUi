@@ -67,7 +67,12 @@ export default function Login() {
             placeholder='Password'
             error={errors.password}
           ></BaseInput>
-          <BaseButton loading={isLoading} type='submit' text='Submit' />
+          <BaseButton
+            loading={isLoading}
+            type='submit'
+            backgroundColor='#222222'
+            text='Submit'
+          />
           {alertMessage && <div className='error_message'> {alertMessage}</div>}
         </form>
       </BaseCard>

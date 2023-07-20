@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 /**
  * Layout
@@ -7,23 +7,27 @@ import styled from "styled-components";
  * CT = Content
  */
 
-export const Grid = styled.div`
-    display: grid;
-    grid-template-columns: 250px auto;
-    grid-template-rows: 80px auto;
+export const Container = styled.div`
+  margin: 30px;
+`;
 
-    grid-template-areas:
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 250px auto;
+  grid-template-rows: 80px auto;
+
+  grid-template-areas:
     'AS MH'
     'AS CT';
 
-    height: 100vh;
+  height: 100vh;
 
-    @media(max-width: 600px) {
-        grid-template-columns: 100%;
-        grid-template-rows: 80px auto;
-        
-        grid-template-areas:
-        'MH'
-        'CT';
-    }
+  @media (max-width: 600px) {
+    grid-template-columns: 100%;
+    grid-template-rows: 80px auto;
+
+    grid-template-areas:
+      'MH'
+      'CT';
+  }
 `;

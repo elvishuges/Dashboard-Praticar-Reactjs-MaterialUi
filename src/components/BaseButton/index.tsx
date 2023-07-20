@@ -3,6 +3,7 @@ import { BaseButtonContainer } from './style';
 interface PropsBaseButton {
   text: string;
   color?: string;
+  backgroundColor?: string;
   borderRadius?: string;
   padding?: string;
   fontSize?: string;
@@ -18,12 +19,14 @@ const BaseButton: React.FC<PropsBaseButton> = ({
   borderRadius,
   padding,
   fontSize,
+  backgroundColor,
   onButtonClick,
   loading,
 }) => {
   return (
     <BaseButtonContainer
       color={color}
+      backgroundColor={backgroundColor}
       borderRadius={borderRadius}
       padding={padding}
       fontSize={fontSize}
