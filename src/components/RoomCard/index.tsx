@@ -1,6 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import BaseButton from '../BaseButton';
-import { Container, Text } from './style';
+import {
+  Action,
+  ChatBubble,
+  ChatBubbleWrapper,
+  Container,
+  Date,
+  Text,
+  TextContent,
+  TopicChip,
+} from './style';
 
 const RoomCard = () => {
   const handleLogout = () => {
@@ -9,16 +18,24 @@ const RoomCard = () => {
 
   return (
     <Container>
-      <Text>Olá seja bem vindo ao change my mid</Text>
+      <Text>
+        <div className='infos'>
+          <TopicChip>Programação</TopicChip>
+        </div>
 
-      <BaseButton
-        padding='8px'
-        type='button'
-        text='Change My Mind'
-        backgroundColor='#3D5A73'
-        borderRadius='0px'
-        onButtonClick={handleLogout}
-      />
+        <TextContent>
+          <div className='user-infos'>
+            Usuario: Elvis Huges <br /> Status:Ativo
+          </div>
+          <ChatBubbleWrapper>
+            <ChatBubble>Olá! Como você está?</ChatBubble>
+          </ChatBubbleWrapper>
+        </TextContent>
+      </Text>
+
+      <Action>
+        <div className='content'> Change My Mind</div>
+      </Action>
     </Container>
   );
 };

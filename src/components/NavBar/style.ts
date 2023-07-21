@@ -4,7 +4,6 @@ export const NavbarContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f0f0f0;
   padding: 10px 20px;
   background-color: #222222;
   color: #f0f0f0;

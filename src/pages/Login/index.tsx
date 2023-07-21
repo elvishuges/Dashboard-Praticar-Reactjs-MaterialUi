@@ -70,7 +70,7 @@ export default function Login() {
           <BaseButton
             loading={isLoading}
             type='submit'
-            backgroundColor='#222222'
+            backgroundColor='#948011'
             text='Submit'
           />
           {alertMessage && <div className='error_message'> {alertMessage}</div>}
