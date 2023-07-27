@@ -1,33 +1,66 @@
-import { useState } from 'react';
-import BaseInput from '../../components/BaseInput';
+import { useEffect, useState } from 'react';
+
 import BaseButton from '../../components/BaseButton';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import BaseCombobox from '../../components/BaseCombobox';
-import validator from '../../utils/validationRules';
-import Select from '../../components/oldSelect';
-import SelectElement from '../../components/BaseSelect';
-import Navbar from '../../components/NavBar';
+
 import { Container } from './style';
 import RoomCard from '../../components/RoomCard';
 import { Col, Row } from 'react-grid-system';
+import { useNavigate } from 'react-router-dom';
+import * as user from './../../services/user';
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
 // select
 
+interface RoomData {
+  idRoom: string;
+  date: string;
+  description: string;
+  meetLink: string;
+  // Add other properties as needed
+}
 export default function Home() {
+  const navigate = useNavigate();
+  const [rooms, setRooms] = useState<RoomData[]>([]);
+
+  const handleCreateRoom = () => {
+    navigate('/create-room');
+  };
+
+  useEffect(() => {
+    // Fetch the rooms when the component mounts
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    try {
+      const roomsData: RoomData[] = await user.getAllRoom();
+      setRooms(roomsData);
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
+
   return (
     <Container>
       <Row>
-        <Col sm={3}>
-          <RoomCard />
-        </Col>
-        <Col sm={3}>
-          <RoomCard />
-        </Col>
-        <Col sm={3}>
-          <RoomCard />
-        </Col>
+        {rooms.map((room) => (
+          <Col sm={3} key={room.idRoom}>
+            <RoomCard
+              date={room.date}
+              description={room.description}
+              meetLink={room.meetLink}
+            />
+          </Col>
+        ))}
       </Row>
+      <div className='footer-button'>
+        <BaseButton
+          background='#222222'
+          type='button'
+          onButtonClick={handleCreateRoom}
+          text='Criar Encontro'
+        ></BaseButton>
+      </div>
     </Container>
   );
 }

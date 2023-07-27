@@ -46,7 +46,7 @@ export default function Login() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <BaseInput
             {...register('email', {
-              required: 'required field',
+              required: 'Campo Obrigatório',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'invalid field.',
@@ -59,7 +59,7 @@ export default function Login() {
           ></BaseInput>
           <BaseInput
             {...register('password', {
-              required: 'required field',
+              required: 'Campo Obrigatório',
             })}
             name='password'
             value={password}
@@ -70,7 +70,7 @@ export default function Login() {
           <BaseButton
             loading={isLoading}
             type='submit'
-            backgroundColor='#948011'
+            background='#222222'
             text='Submit'
           />
           {alertMessage && <div className='error_message'> {alertMessage}</div>}

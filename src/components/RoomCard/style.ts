@@ -14,12 +14,11 @@ export const Container = styled.div`
   color: #f0f0f0;
 `;
 export const TopicChip = styled.div`
-  border-radius: 10px;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   height: 20px;
   width: 100%;
-  padding: 3px;
   font-size: 14px;
   background-color: #232c33 !important;
   color: #dadff7 !important;
@@ -35,7 +34,7 @@ export const Text = styled.div`
   flex-direction: column;
   justify-content: space-between;
   .infos {
-    margin: 10px;
+    margin: 10px 10px 0 10px;
     font-weight: 600;
     color: #222222;
     font-size: 12px;
@@ -48,8 +47,9 @@ export const TextContent = styled.div`
   justify-content: space-evenly;
   color: #222222;
   padding: 8px;
-  .user-infos {
+  .meet-infos {
     font-size: 12px;
+    padding-bottom: 5px;
   }
 `;
 
@@ -67,7 +67,7 @@ export const ChatBubble = styled.div<ChatBubbleWrapperProps>`
   border-radius: ${(props) =>
     props.sender ? '15px 0 15px 15px' : '0 15px 15px 15px'};
   padding: 10px 15px;
-  max-width: 70%;
+  max-width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
@@ -75,7 +75,6 @@ export const Action = styled.div`
   margin: 0;
   display: flex;
   justify-content: center;
-  font-weight: 100;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   background-color: #ec585d;
@@ -83,7 +82,7 @@ export const Action = styled.div`
   cursor: pointer;
   .content {
     font-size: 23px;
-    font-weight: 600;
+    font-weight: 300;
     margin: 10px;
   }
 `;

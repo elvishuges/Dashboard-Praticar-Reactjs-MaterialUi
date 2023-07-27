@@ -10,14 +10,14 @@ const jump = keyframes`
 `;
 interface BaseButtonContainerProps {
   color?: string;
-  backgroundColor?: string;
+  background?: string;
   borderRadius?: string;
   padding?: string;
   fontSize?: string;
 }
 
 export const BaseButtonContainer = styled.button<BaseButtonContainerProps>`
-  background-color: ${(props) => props.backgroundColor || '#EE5684'};
+  background-color: ${(props) => props.background || '#EE5684'};
   border: 8px;
   border-radius: ${(props) => props.borderRadius || '5px'};
   color: ${(props) => props.color || '#F2F2F2'};

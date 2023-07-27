@@ -8,9 +8,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Lógica para realizar o logout
     logout();
-    navigate('/');
+    navigate('/login');
   };
 
   return (
@@ -20,7 +19,7 @@ const Navbar = () => {
         <BaseButton
           type='button'
           text='Logout'
-          backgroundColor='#222222'
+          background='#222222'
           onButtonClick={handleLogout}
         />
       </div>

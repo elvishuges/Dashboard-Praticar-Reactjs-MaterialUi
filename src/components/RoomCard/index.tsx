@@ -11,7 +11,13 @@ import {
   TopicChip,
 } from './style';
 
-const RoomCard = () => {
+type Props = {
+  date: string;
+  description: string;
+  meetLink: string;
+};
+
+const RoomCard: React.FC<Props> = ({ date, description, meetLink }) => {
   const handleLogout = () => {
     // Lógica para realizar o logout
   };
@@ -24,17 +30,20 @@ const RoomCard = () => {
         </div>
 
         <TextContent>
-          <div className='user-infos'>
-            Usuario: Elvis Huges <br /> Status:Ativo
+          <div className='meet-infos'>
+            Criador: Elvis Huges <br />
+            Status:Ativo <br />
+            Link Meet: {meetLink} <br />
+            Data: {date}
           </div>
           <ChatBubbleWrapper>
-            <ChatBubble>Olá! Como você está?</ChatBubble>
+            <ChatBubble>{description}</ChatBubble>
           </ChatBubbleWrapper>
         </TextContent>
       </Text>
 
       <Action>
-        <div className='content'> Change My Mind</div>
+        <div className='content'> Change My Mind...</div>
       </Action>
     </Container>
   );

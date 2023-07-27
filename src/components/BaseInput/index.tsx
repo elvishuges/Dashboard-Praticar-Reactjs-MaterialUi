@@ -11,6 +11,7 @@ interface PropsBaseInput {
   onChangeActive?: (e: boolean) => void;
   onClick?: () => void;
   error?: any | '';
+  type?: string;
   setHasError?: (value: boolean) => void;
 }
 
@@ -27,6 +28,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, PropsBaseInput>(
       onClick,
       borderRadius,
       error,
+      type,
       ...rest
     }: PropsBaseInput,
     ref
@@ -66,7 +68,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, PropsBaseInput>(
           <Input
             name={name}
             className={`${error ? 'error' : ''}`}
-            type='text'
+            type={type}
             onChange={(e: any) => handleChange(e)}
             ref={ref}
             value={value}
