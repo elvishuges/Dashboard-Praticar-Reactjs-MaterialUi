@@ -8,8 +8,8 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: #f0f0f0;
-  height: 200px;
   width: auto;
+  margin-top: 10px;
   background-color: #f2f2f2;
   color: #f0f0f0;
 `;

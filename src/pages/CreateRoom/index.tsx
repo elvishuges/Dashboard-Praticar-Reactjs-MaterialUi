@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BaseInput from '../../components/BaseInput';
 import BaseButton from '../../components/BaseButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -6,6 +6,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Col, Row } from 'react-grid-system';
 import { Container } from './style';
 import * as user from './../../services/user';
+import BaseSelect from '../../components/BaseSelect';
+import { error } from 'console';
 
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
@@ -15,6 +17,17 @@ type FormInputs = {
   description: string;
   meetLink: string;
   date: string;
+  topic: string;
+};
+
+type Option = {
+  value: string;
+  label: string;
+};
+
+type Topic = {
+  idTopic: string;
+  description: string;
 };
 
 export default function CreateRoom() {
@@ -27,12 +40,40 @@ export default function CreateRoom() {
   const [startDate, setStartDate] = useState(new Date());
   const [description, setDescription] = useState('');
   const [meetLink, setMeetLink] = useState('');
+  const [topic, setTopic] = useState('');
+  const [selectOption, setSelectOption] = useState<Option[]>([]);
   //const [startDate, setDate] = useState(new Date());
+  const options: Option[] = [];
+
+  useEffect(() => {
+    fetchTopics();
+  }, []);
+
+  const fetchTopics = async () => {
+    try {
+      const topicsData: Topic[] = await user.getAllTopic();
+
+      const newOptions: Option[] = topicsData.map((topic) => ({
+        value: topic.idTopic,
+        label: topic.description,
+      }));
+
+      // Atualize o estado 'options' usando o novo array de opções
+      setSelectOption([
+        { label: 'Escolha o tópico', value: '' },
+        ...newOptions,
+      ]);
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    console.log('data', data);
+
     try {
       await user.createRoom(
-        'e536f29b-d30e-4f5c-9f7c-ff4fd2bfba6c',
+        data.topic,
         data.description,
         data.meetLink,
         data.date
@@ -41,10 +82,10 @@ export default function CreateRoom() {
   };
 
   const handleDateChange = (value: any) => {
-    const value2 = new Date(value);
+    const valueDate = new Date(value);
 
-    if (!isNaN(value2.getTime())) {
-      setStartDate(value2);
+    if (!isNaN(valueDate.getTime())) {
+      setStartDate(valueDate);
     } else {
       console.error('Data inválida!');
       setStartDate(new Date());
@@ -82,6 +123,21 @@ export default function CreateRoom() {
               placeholder='Data'
               onChange={(e: any) => handleDateChange(e.target.value)}
             />
+          </Col>
+        </Row>
+        <Row>
+          {topic}
+          <Col sm={6}>
+            <BaseSelect
+              {...register('topic', {
+                required: 'Campo Obrigatório',
+              })}
+              error={errors.topic}
+              placeholder='Topic'
+              name='topic'
+              value={topic}
+              options={selectOption}
+            ></BaseSelect>
           </Col>
         </Row>
         <BaseButton type='submit' text='Criar Encontro' />

@@ -20,12 +20,24 @@ export const ContainerCustomSelect = styled.div`
   width: 80%;
 `;
 export const ContainerSelect = styled.select`
-  padding: 10px;
+  padding: 12px;
   font-size: 16px;
+  font-family: 'Arial';
+  display: flex;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 200px;
+  border-color: #f5f5f5;
+  border-bottom-color: #a5a5a5;
+  width: 100%;
+  background-color: #f5f5f5;
   outline: none;
+  &:hover {
+    background-color: #eeee;
+    border-bottom: 2px solid;
+  }
+  &.error {
+    border-bottom-color: red !important;
+  }
 `;
 
 export const OptionList = styled.div`

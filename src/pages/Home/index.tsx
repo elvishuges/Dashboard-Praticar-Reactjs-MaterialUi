@@ -27,7 +27,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // Fetch the rooms when the component mounts
     fetchRooms();
   }, []);
 

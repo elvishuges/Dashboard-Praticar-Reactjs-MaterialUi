@@ -92,43 +92,8 @@ const BaseSelect = React.forwardRef<HTMLSelectElement, SelectElementProps>(
             </OptionList>
           )}
         </ContainerSelect>
-        {/* <ContainerCustomSelect
-          ref={selectRef}
-          onClick={() => {
-            setOpen((prev) => !prev);
-          }}
-        >
-          <div className={`custom-select ${isOpen && 'open'}`}>
-            <div className='custom-select__trigger'>
-              <span>
-                {options.find((item) => item.value === selected)?.label ||
-                  'Select'}
-              </span>
-              <div className='arrow'></div>
-            </div>
-            <div className='custom-options'>
-              {options.map((item) => (
-                <div
-                  key={item.value}
-                  onClick={() => {
-                    setSelected(item.value);
-                  }}
-                  className='option-container'
-                >
-                  <span
-                    className={`custom-option ${
-                      selected === item.value && 'selected'
-                    } `}
-                    data-value={item.value}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </ContainerCustomSelect> */}
-        {error && <span>{error.message}</span>}
+
+        {error && <div className='error-message'>{error.message}</div>}
       </Container>
     );
   }
