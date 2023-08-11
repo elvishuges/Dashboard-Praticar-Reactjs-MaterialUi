@@ -8,6 +8,8 @@ import { Container } from './style';
 import * as user from './../../services/user';
 import BaseSelect from '../../components/BaseSelect';
 import { error } from 'console';
+import LocalStorageService from '../../services/localstorage';
+import SnackBar from '../../components/utils/SnackBar';
 
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
@@ -40,16 +42,19 @@ export default function CreateRoom() {
   const [startDate, setStartDate] = useState(new Date());
   const [description, setDescription] = useState('');
   const [meetLink, setMeetLink] = useState('');
+  const [loading, setLoading] = useState(false);
   const [topic, setTopic] = useState('');
+  const [showSnack, setShowSnack] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('Hello');
   const [selectOption, setSelectOption] = useState<Option[]>([]);
   //const [startDate, setDate] = useState(new Date());
   const options: Option[] = [];
 
   useEffect(() => {
-    fetchTopics();
+    loadTopics();
   }, []);
 
-  const fetchTopics = async () => {
+  const loadTopics = async () => {
     try {
       const topicsData: Topic[] = await user.getAllTopic();
 
@@ -58,7 +63,6 @@ export default function CreateRoom() {
         label: topic.description,
       }));
 
-      // Atualize o estado 'options' usando o novo array de opções
       setSelectOption([
         { label: 'Escolha o tópico', value: '' },
         ...newOptions,
@@ -69,16 +73,22 @@ export default function CreateRoom() {
   };
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    console.log('data', data);
-
+    const logedUser = LocalStorageService.getItem('@change-my-mind:user');
+    setLoading(true);
     try {
-      await user.createRoom(
-        data.topic,
-        data.description,
-        data.meetLink,
-        data.date
-      );
-    } catch (error) {}
+      // await user.createRoom(
+      //   logedUser.id,
+      //   data.topic,
+      //   data.description,
+      //   data.meetLink,
+      //   data.date
+      // );
+      setShowSnack(true);
+      setSnackMessage('Sala Criada com Sucesso');
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDateChange = (value: any) => {
@@ -126,7 +136,6 @@ export default function CreateRoom() {
           </Col>
         </Row>
         <Row>
-          {topic}
           <Col sm={6}>
             <BaseSelect
               {...register('topic', {
@@ -140,8 +149,13 @@ export default function CreateRoom() {
             ></BaseSelect>
           </Col>
         </Row>
-        <BaseButton type='submit' text='Criar Encontro' />
+        <BaseButton loading={loading} type='submit' text='Criar Encontro' />
       </form>
+      <SnackBar
+        active={showSnack}
+        setActive={() => setShowSnack(false)}
+        message={snackMessage}
+      />
     </Container>
   );
 }

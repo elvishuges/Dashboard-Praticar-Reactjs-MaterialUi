@@ -21,6 +21,7 @@ export const ContainerCustomSelect = styled.div`
 `;
 export const ContainerSelect = styled.select`
   padding: 12px;
+  height: 53px;
   font-size: 16px;
   font-family: 'Arial';
   display: flex;

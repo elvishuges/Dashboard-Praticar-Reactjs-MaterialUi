@@ -11,13 +11,13 @@ import {
   TopicChip,
 } from './style';
 
+import { RoomData } from '../../types/RoomDTO';
+
 type Props = {
-  date: string;
-  description: string;
-  meetLink: string;
+  room: RoomData;
 };
 
-const RoomCard: React.FC<Props> = ({ date, description, meetLink }) => {
+const RoomCard: React.FC<Props> = ({ room }) => {
   const handleLogout = () => {
     // Lógica para realizar o logout
   };
@@ -26,18 +26,22 @@ const RoomCard: React.FC<Props> = ({ date, description, meetLink }) => {
     <Container>
       <Text>
         <div className='infos'>
-          <TopicChip>Programação</TopicChip>
+          {room.topic ? <TopicChip>{room.topic.description}</TopicChip> : '--'}
         </div>
 
         <TextContent>
           <div className='meet-infos'>
-            Criador: Elvis Huges <br />
+            Criador:
+            <span className='user-name'>
+              {room.user ? ' ' + room.user.username : ' ---'}
+            </span>
+            <br />
             Status:Ativo <br />
-            Link Meet: {meetLink} <br />
-            Data: {date}
+            Link Meet: {room.meetLink} <br />
+            Data: {room.date}
           </div>
           <ChatBubbleWrapper>
-            <ChatBubble>{description}</ChatBubble>
+            <ChatBubble>{room.description}</ChatBubble>
           </ChatBubbleWrapper>
         </TextContent>
       </Text>

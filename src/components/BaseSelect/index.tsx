@@ -16,10 +16,10 @@ interface SelectElementProps {
   options: Option[];
   defaultValue?: string;
   name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder: string;
-  error: any;
+  error?: any;
 }
 
 const BaseSelect = React.forwardRef<HTMLSelectElement, SelectElementProps>(
@@ -67,7 +67,9 @@ const BaseSelect = React.forwardRef<HTMLSelectElement, SelectElementProps>(
 
     const handleOptionClick = (optionValue: any) => {
       setOpen(false);
-      onChange(optionValue);
+      if (onChange) {
+        onChange(optionValue);
+      }
     };
 
     return (

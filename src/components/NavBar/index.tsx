@@ -11,10 +11,13 @@ const Navbar = () => {
     logout();
     navigate('/login');
   };
+  const handleHomeClick = () => {
+    navigate('/');
+  };
 
   return (
     <NavbarContainer>
-      <Title>Change My Mind</Title>
+      <Title onClick={handleHomeClick}>Change My Mind</Title>
       <div className='button-logout'>
         <BaseButton
           type='button'

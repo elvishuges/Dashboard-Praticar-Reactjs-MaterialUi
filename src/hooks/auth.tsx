@@ -2,6 +2,8 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 import * as auth from '../services/auth';
 import { json } from 'stream/consumers';
 
+import LocalStorageService from './../services/localstorage';
+
 type AuthTypeProps = {
   isLogged: boolean;
   login(email: string, password: string): void;
@@ -16,15 +18,15 @@ const AuthContext = createContext<AuthTypeProps>({} as AuthTypeProps);
 
 export const AuthProvider = ({ children }: AuthProviderChildren) => {
   const [isLogged, setIsLogged] = useState<boolean>(() => {
-    const loginValid = localStorage.getItem('@change-my-mind:logged');
-    return !!loginValid;
+    const storedUser = LocalStorageService.getItem('@change-my-mind:user');
+    return !!storedUser;
   });
 
   const login = async (email: string, password: string) => {
     try {
       const response = await auth.login(email, password);
-      localStorage.setItem('@change-my-mind:user', JSON.stringify(response));
-      localStorage.setItem('@change-my-mind:logged', 'true');
+      LocalStorageService.setItem('@change-my-mind:user', response);
+      LocalStorageService.setItem('@change-my-mind:logged', 'true');
       setIsLogged(true);
     } catch (error) {
       throw new Error('erro');
@@ -32,8 +34,8 @@ export const AuthProvider = ({ children }: AuthProviderChildren) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('@change-my-mind:user');
-    localStorage.removeItem('@change-my-mind:logged');
+    LocalStorageService.removeItem('@change-my-mind:user');
+    LocalStorageService.removeItem('@change-my-mind:logged');
     setIsLogged(false);
   };
 

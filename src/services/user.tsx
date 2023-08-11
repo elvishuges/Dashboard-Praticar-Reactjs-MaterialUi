@@ -1,13 +1,15 @@
 import api from '../services/api';
 
 export async function createRoom(
-  topic: string,
+  userId: string,
+  topicId: string,
   description: string,
   meetLink: string,
   date: string
 ): Promise<any> {
   const response = await api.post<any>('/room', {
-    topic,
+    userId,
+    topicId,
     description,
     meetLink,
     date,

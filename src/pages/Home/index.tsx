@@ -7,20 +7,21 @@ import RoomCard from '../../components/RoomCard';
 import { Col, Row } from 'react-grid-system';
 import { useNavigate } from 'react-router-dom';
 import * as user from './../../services/user';
+import BaseInput from '../../components/BaseInput';
+import BaseSelect from '../../components/BaseSelect';
+import { RoomData } from '../../types/RoomDTO';
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
 // select
 
-interface RoomData {
-  idRoom: string;
-  date: string;
-  description: string;
-  meetLink: string;
-  // Add other properties as needed
-}
+type Option = {
+  value: string;
+  label: string;
+};
 export default function Home() {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<RoomData[]>([]);
+  const [selectOption, setSelectOption] = useState<Option[]>([]);
 
   const handleCreateRoom = () => {
     navigate('/create-room');
@@ -36,19 +37,24 @@ export default function Home() {
       setRooms(roomsData);
     } catch (error) {
       console.error('Error fetching rooms:', error);
+      alert(`'Error fetching rooms:', ${error}`);
     }
   };
 
   return (
     <Container>
       <Row>
+        <Col>
+          <BaseInput placeholder='Buscar'></BaseInput>
+        </Col>
+        <Col>
+          <BaseSelect placeholder='Topic' name='topic' options={selectOption} />
+        </Col>
+      </Row>
+      <Row>
         {rooms.map((room) => (
           <Col sm={3} key={room.idRoom}>
-            <RoomCard
-              date={room.date}
-              description={room.description}
-              meetLink={room.meetLink}
-            />
+            <RoomCard room={room} />
           </Col>
         ))}
       </Row>

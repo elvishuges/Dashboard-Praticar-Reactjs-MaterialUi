@@ -14,14 +14,11 @@ export const Container = styled.div`
   color: #f0f0f0;
 `;
 export const TopicChip = styled.div`
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  height: 20px;
-  width: 100%;
-  font-size: 14px;
-  background-color: #232c33 !important;
-  color: #dadff7 !important;
+  max-width: 250px;
+  font-size: 20dp;
+  white-space: nowrap;
+  overflow: hidden; /* "overflow" value must be different from "visible" */
+  text-overflow: ellipsis;
 `;
 export const Date = styled.div`
   font-size: 10px;
@@ -50,6 +47,9 @@ export const TextContent = styled.div`
   .meet-infos {
     font-size: 12px;
     padding-bottom: 5px;
+  }
+  .user-name {
+    text-transform: uppercase;
   }
 `;
 
