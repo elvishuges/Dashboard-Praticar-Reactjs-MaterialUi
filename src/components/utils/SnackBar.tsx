@@ -25,7 +25,17 @@ const SnackBar: React.FC<SnackBarProps> = ({
       };
     }
   }, [active, autoHideDuration]);
-  return active ? <SnackBarContainer>{message}</SnackBarContainer> : <></>;
+
+  return active ? (
+    <SnackBarContainer>
+      <div className='message'>{message}</div>{' '}
+      <div className='close-action' onClick={() => setActive(false)}>
+        Fechar
+      </div>
+    </SnackBarContainer>
+  ) : (
+    <></>
+  );
 };
 
 export default SnackBar;

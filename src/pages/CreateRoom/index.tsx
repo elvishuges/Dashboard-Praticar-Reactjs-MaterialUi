@@ -36,6 +36,7 @@ export default function CreateRoom() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormInputs>({ mode: 'onBlur' });
 
@@ -76,15 +77,16 @@ export default function CreateRoom() {
     const logedUser = LocalStorageService.getItem('@change-my-mind:user');
     setLoading(true);
     try {
-      // await user.createRoom(
-      //   logedUser.id,
-      //   data.topic,
-      //   data.description,
-      //   data.meetLink,
-      //   data.date
-      // );
+      await user.createRoom(
+        logedUser.id,
+        data.topic,
+        data.description,
+        data.meetLink,
+        data.date
+      );
+      setSnackMessage('Sala Criada com Sucesso!!!');
       setShowSnack(true);
-      setSnackMessage('Sala Criada com Sucesso');
+      resetForm();
     } catch (error) {
     } finally {
       setLoading(false);
@@ -100,6 +102,11 @@ export default function CreateRoom() {
       console.error('Data inválida!');
       setStartDate(new Date());
     }
+  };
+
+  const resetForm = () => {
+    setMeetLink('');
+    setDescription('');
   };
 
   return (
