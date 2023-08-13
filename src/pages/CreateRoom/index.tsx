@@ -92,6 +92,7 @@ export default function CreateRoom() {
       const { response } = error;
       setSnackMessage(response.data.message);
       setShowSnack(true);
+      resetForm();
     } finally {
       setLoading(false);
     }
