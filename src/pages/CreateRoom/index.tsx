@@ -10,6 +10,7 @@ import BaseSelect from '../../components/BaseSelect';
 import { error } from 'console';
 import LocalStorageService from '../../services/localstorage';
 import SnackBar from '../../components/utils/SnackBar';
+import { AnyCnameRecord } from 'dns';
 
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
@@ -87,7 +88,10 @@ export default function CreateRoom() {
       setSnackMessage('Sala Criada com Sucesso!!!');
       setShowSnack(true);
       resetForm();
-    } catch (error) {
+    } catch (error: any) {
+      const { response } = error;
+      setSnackMessage(response.data.message);
+      setShowSnack(true);
     } finally {
       setLoading(false);
     }
@@ -99,7 +103,6 @@ export default function CreateRoom() {
     if (!isNaN(valueDate.getTime())) {
       setStartDate(valueDate);
     } else {
-      console.error('Data inválida!');
       setStartDate(new Date());
     }
   };
