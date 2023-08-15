@@ -24,7 +24,7 @@ const SnackBar: React.FC<SnackBarProps> = ({
         clearTimeout(timeoutId);
       };
     }
-  }, [active, autoHideDuration]);
+  }, [active]);
 
   return active ? (
     <SnackBarContainer>

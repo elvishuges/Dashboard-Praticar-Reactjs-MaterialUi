@@ -75,6 +75,8 @@ export default function CreateRoom() {
   };
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    console.log('data', data);
+
     const logedUser = LocalStorageService.getItem('@change-my-mind:user');
     setLoading(true);
     try {
@@ -98,15 +100,15 @@ export default function CreateRoom() {
     }
   };
 
-  const handleDateChange = (value: any) => {
-    const valueDate = new Date(value);
+  // const handleDateChange = (value: any) => {
+  //   const valueDate = new Date(value);
 
-    if (!isNaN(valueDate.getTime())) {
-      setStartDate(valueDate);
-    } else {
-      setStartDate(new Date());
-    }
-  };
+  //   if (!isNaN(valueDate.s))) {
+  //     setStartDate(valueDate);
+  //   } else {
+  //     setStartDate(new Date());
+  //   }
+  // };
 
   const resetForm = () => {
     setMeetLink('');
@@ -137,12 +139,12 @@ export default function CreateRoom() {
           <Col sm={6}>
             <BaseInput
               {...register('date', {
-                required: false,
+                required: true,
               })}
-              type='date'
-              value={startDate.toISOString().split('T')[0]}
+              type='datetime-local'
+              value={startDate}
               placeholder='Data'
-              onChange={(e: any) => handleDateChange(e.target.value)}
+              onChange={(e: any) => setStartDate(e.target.value)}
             />
           </Col>
         </Row>

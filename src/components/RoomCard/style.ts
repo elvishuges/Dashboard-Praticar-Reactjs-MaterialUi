@@ -15,7 +15,7 @@ export const Container = styled.div`
 `;
 export const TopicChip = styled.div`
   max-width: 250px;
-  font-size: 20dp;
+  font-size: 20px;
   white-space: nowrap;
   overflow: hidden; /* "overflow" value must be different from "visible" */
   text-overflow: ellipsis;
@@ -50,6 +50,9 @@ export const TextContent = styled.div`
   }
   .user-name {
     text-transform: uppercase;
+  }
+  .meet-infos > span {
+    font-size: bold !important;
   }
 `;
 

@@ -3,7 +3,7 @@ import { ContainerInput, Input, Container } from './style';
 
 interface PropsBaseInput {
   name?: string;
-  value?: string | number | undefined;
+  value?: string | number | undefined | any;
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   borderRadius?: string;

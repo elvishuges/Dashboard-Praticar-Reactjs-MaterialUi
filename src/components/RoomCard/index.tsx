@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import BaseButton from '../BaseButton';
+
 import {
   Action,
   ChatBubble,
@@ -12,15 +13,14 @@ import {
 } from './style';
 
 import { RoomData } from '../../types/RoomDTO';
+import { formatDate } from '../../utils/functions';
 
 type Props = {
   room: RoomData;
 };
 
 const RoomCard: React.FC<Props> = ({ room }) => {
-  const handleLogout = () => {
-    // Lógica para realizar o logout
-  };
+  const date: Date = formatDate(room.date) as Date;
 
   return (
     <Container>
@@ -31,14 +31,15 @@ const RoomCard: React.FC<Props> = ({ room }) => {
 
         <TextContent>
           <div className='meet-infos'>
-            Criador:
+            <strong>Criador:</strong>
             <span className='user-name'>
               {room.user ? ' ' + room.user.username : ' ---'}
             </span>
             <br />
-            Status:Ativo <br />
-            Link Meet: {room.meetLink} <br />
-            Data: {room.date}
+            <strong> Status:</strong>Ativo <br />
+            <strong>Link Meet:</strong> {room.meetLink} <br />
+            <strong> Data: </strong>
+            {date.toLocaleString()}
           </div>
           <ChatBubbleWrapper>
             <ChatBubble>{room.description}</ChatBubble>
