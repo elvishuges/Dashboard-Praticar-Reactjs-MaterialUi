@@ -14,19 +14,34 @@ import {
 
 import { RoomData } from '../../types/RoomDTO';
 import { formatDate } from '../../utils/functions';
+import LocalStorageService from '../../services/localstorage';
 
 type Props = {
   room: RoomData;
 };
 
 const RoomCard: React.FC<Props> = ({ room }) => {
-  const date: Date = formatDate(room.date) as Date;
+  const navigate = useNavigate();
+  const date: Date = formatDate(room.date);
+  const user = LocalStorageService.getItem('@change-my-mind:user');
+  const handleEditClick = () => {
+    navigate(`/edit-room/${room.idRoom}`);
+  };
 
   return (
     <Container>
       <Text>
         <div className='infos'>
-          {room.topic ? <TopicChip>{room.topic.description}</TopicChip> : '--'}
+          <div>
+            {room.topic ? (
+              <TopicChip>{room.topic.description}</TopicChip>
+            ) : (
+              '--'
+            )}
+          </div>
+          <div onClick={() => handleEditClick()} className='actions'>
+            {room.user?.id == user.id ? 'Editar' : ''}
+          </div>
         </div>
 
         <TextContent>

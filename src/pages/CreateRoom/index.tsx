@@ -11,6 +11,8 @@ import { error } from 'console';
 import LocalStorageService from '../../services/localstorage';
 import SnackBar from '../../components/utils/SnackBar';
 import { AnyCnameRecord } from 'dns';
+import { useParams } from 'react-router-dom';
+import { RoomData } from '../../types/RoomDTO';
 
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
@@ -33,28 +35,58 @@ type Topic = {
   description: string;
 };
 
+const hours = ['12', '24', '36'];
+
 export default function CreateRoom() {
+  let { id } = useParams();
+  console.log('id', id);
+
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
   } = useForm<FormInputs>({ mode: 'onBlur' });
 
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState('');
   const [description, setDescription] = useState('');
   const [meetLink, setMeetLink] = useState('');
-  const [loading, setLoading] = useState(false);
   const [topic, setTopic] = useState('');
+
+  const [room, serRoom] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [snackMessage, setSnackMessage] = useState('Hello');
   const [selectOption, setSelectOption] = useState<Option[]>([]);
+  const [mode, setMode] = useState('create');
   //const [startDate, setDate] = useState(new Date());
   const options: Option[] = [];
 
   useEffect(() => {
-    loadTopics();
+    setMode('create');
+    loadTopics().then(() => {
+      if (id) {
+        loadRoomById(id);
+      }
+    });
   }, []);
+
+  const loadRoomById = async (id: string) => {
+    try {
+      const room: RoomData = await user.getRoomById(id);
+      //setDescription(room.description);
+      //setMeetLink(room.meetLink);
+      //setStartDate(room.date);
+      setTopic(room.topic?.idTopic || '');
+
+      setValue('description', room.description);
+      setValue('meetLink', room.meetLink);
+      setValue('date', room.date);
+      setValue('topic', room.topic?.idTopic || '');
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
 
   const loadTopics = async () => {
     try {
@@ -75,10 +107,9 @@ export default function CreateRoom() {
   };
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    console.log('data', data);
-
     const logedUser = LocalStorageService.getItem('@change-my-mind:user');
     setLoading(true);
+
     try {
       await user.createRoom(
         logedUser.id,
@@ -100,16 +131,6 @@ export default function CreateRoom() {
     }
   };
 
-  // const handleDateChange = (value: any) => {
-  //   const valueDate = new Date(value);
-
-  //   if (!isNaN(valueDate.s))) {
-  //     setStartDate(valueDate);
-  //   } else {
-  //     setStartDate(new Date());
-  //   }
-  // };
-
   const resetForm = () => {
     setMeetLink('');
     setDescription('');
@@ -122,16 +143,15 @@ export default function CreateRoom() {
           {...register('description', {
             required: 'Campo Obrigatório',
           })}
-          value={description}
-          onChange={(e: any) => setDescription(e.target.value)}
+          name='description'
           placeholder='Descrição (ex: Vue é melhor que React)'
+          onChange={(e: any) => setDescription(e.target.value)}
           error={errors.description}
         />
         <BaseInput
           {...register('meetLink', {
             required: false,
           })}
-          value={meetLink}
           onChange={(e: any) => setMeetLink(e.target.value)}
           placeholder='Link Meet (Adicionar caso o evento estiver próximo)'
         />
@@ -139,12 +159,12 @@ export default function CreateRoom() {
           <Col sm={6}>
             <BaseInput
               {...register('date', {
-                required: true,
+                required: 'Campo Obrigatório',
               })}
               type='datetime-local'
-              value={startDate}
               placeholder='Data'
               onChange={(e: any) => setStartDate(e.target.value)}
+              error={errors.date}
             />
           </Col>
         </Row>
@@ -154,11 +174,11 @@ export default function CreateRoom() {
               {...register('topic', {
                 required: 'Campo Obrigatório',
               })}
-              error={errors.topic}
               placeholder='Topic'
               name='topic'
-              value={topic}
               options={selectOption}
+              onChange={(value) => setTopic(value)}
+              error={errors.topic}
             ></BaseSelect>
           </Col>
         </Row>

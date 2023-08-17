@@ -47,9 +47,6 @@ export default function Home() {
         <Col>
           <BaseInput placeholder='Buscar'></BaseInput>
         </Col>
-        <Col>
-          <BaseSelect placeholder='Topic' name='topic' options={selectOption} />
-        </Col>
       </Row>
       <Row>
         {rooms.map((room) => (

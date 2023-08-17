@@ -17,7 +17,7 @@ interface SelectElementProps {
   defaultValue?: string;
   name: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange?: (e: any) => void;
   placeholder: string;
   error?: any;
 }
@@ -37,19 +37,8 @@ const BaseSelect = React.forwardRef<HTMLSelectElement, SelectElementProps>(
     ref
   ) => {
     const selectRef = useRef(null);
-    const [selected, setSelected] = useState('');
+    const [selected, setSelected] = useState(value);
     const [isOpen, setOpen] = useState(false);
-
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelected(event.target.value);
-    };
-    const handleSelectedValue = (value: any) => {
-      setSelected(value);
-    };
-
-    const handleSelectchange = (value: any) => {
-      console.log('value', value);
-    };
 
     useEffect(() => {
       console.log('name', name);
@@ -57,7 +46,10 @@ const BaseSelect = React.forwardRef<HTMLSelectElement, SelectElementProps>(
       console.log('element', element);
       if (element) {
         (element as HTMLSelectElement).value = selected as string;
-        console.log('element22', element);
+        console.log('selected', selected);
+        if (onChange) {
+          onChange(selected);
+        }
       }
     }, [selected]);
 
@@ -65,34 +57,27 @@ const BaseSelect = React.forwardRef<HTMLSelectElement, SelectElementProps>(
       setOpen(!isOpen);
     };
 
-    const handleOptionClick = (optionValue: any) => {
-      setOpen(false);
+    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
       if (onChange) {
-        onChange(optionValue);
+        onChange(e.target.value);
       }
     };
 
     return (
       <Container className='container-base-combobox'>
-        <ContainerSelect ref={ref} name={name} id={name} {...rest}>
+        <ContainerSelect
+          onChange={(e: any) => onChangeSelect(e)}
+          value={value}
+          ref={ref}
+          name={name}
+          id={name}
+          {...rest}
+        >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
-          {isOpen && (
-            <OptionList>
-              {options.map((option) => (
-                <OptionItem
-                  key={option.value}
-                  selected={option.value === value}
-                  onClick={() => handleOptionClick(option.value)}
-                >
-                  {option.label}
-                </OptionItem>
-              ))}
-            </OptionList>
-          )}
         </ContainerSelect>
 
         {error && <div className='error-message'>{error.message}</div>}

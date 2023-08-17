@@ -10,6 +10,7 @@ function AppRoutes() {
       <Route element={<PrivateRoute />}>
         <Route path='/' element={<Home />} />
         <Route path='/create-room' element={<CreateRoom />} />
+        <Route path='/edit-room/:id' element={<CreateRoom />} />
       </Route>
       <Route path='/login' element={<Login />} />
     </Routes>

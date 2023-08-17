@@ -31,10 +31,15 @@ export const Text = styled.div`
   flex-direction: column;
   justify-content: space-between;
   .infos {
+    display: flex;
+    justify-content: space-between;
     margin: 10px 10px 0 10px;
     font-weight: 600;
     color: #222222;
     font-size: 12px;
+  }
+  .actions {
+    cursor: pointer;
   }
 `;
 
