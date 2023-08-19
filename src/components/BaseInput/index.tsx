@@ -62,9 +62,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, PropsBaseInput>(
           className={error ? 'error' : ''}
           onBlur={(e: any) => handleOnBlur(e)}
         >
-          <label className={active || value !== '' ? 'active' : ''}>
-            {placeholder}
-          </label>
+          <label className={value !== '' ? 'active' : ''}>{placeholder}</label>
           <Input
             name={name}
             className={`${error ? 'error' : ''}`}

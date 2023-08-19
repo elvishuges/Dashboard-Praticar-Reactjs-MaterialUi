@@ -50,7 +50,7 @@ export default function Home() {
       </Row>
       <Row>
         {rooms.map((room) => (
-          <Col sm={3} key={room.idRoom}>
+          <Col sm={4} md={4} key={room.idRoom}>
             <RoomCard room={room} />
           </Col>
         ))}

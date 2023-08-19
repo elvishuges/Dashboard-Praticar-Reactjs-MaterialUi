@@ -7,16 +7,10 @@ import { Col, Row } from 'react-grid-system';
 import { Container } from './style';
 import * as user from './../../services/user';
 import BaseSelect from '../../components/BaseSelect';
-import { error } from 'console';
 import LocalStorageService from '../../services/localstorage';
 import SnackBar from '../../components/utils/SnackBar';
-import { AnyCnameRecord } from 'dns';
 import { useParams } from 'react-router-dom';
 import { RoomData } from '../../types/RoomDTO';
-
-//https://www.codevertiser.com/reusable-input-component-react/
-// https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
-// select
 
 type FormInputs = {
   description: string;
@@ -35,11 +29,8 @@ type Topic = {
   description: string;
 };
 
-const hours = ['12', '24', '36'];
-
 export default function CreateRoom() {
   let { id } = useParams();
-  console.log('id', id);
 
   const {
     register,
@@ -64,20 +55,16 @@ export default function CreateRoom() {
 
   useEffect(() => {
     setMode('create');
-    loadTopics().then(() => {
-      if (id) {
-        loadRoomById(id);
-      }
-    });
+    loadTopics();
+    if (id) {
+      setMode('update');
+      loadRoomById(id);
+    }
   }, []);
 
   const loadRoomById = async (id: string) => {
     try {
       const room: RoomData = await user.getRoomById(id);
-      //setDescription(room.description);
-      //setMeetLink(room.meetLink);
-      //setStartDate(room.date);
-      setTopic(room.topic?.idTopic || '');
 
       setValue('description', room.description);
       setValue('meetLink', room.meetLink);
@@ -109,23 +96,43 @@ export default function CreateRoom() {
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     const logedUser = LocalStorageService.getItem('@change-my-mind:user');
     setLoading(true);
+    await createUpdateRoom(
+      logedUser.id,
+      data.topic,
+      data.description,
+      data.meetLink,
+      data.date
+    );
+  };
 
+  const createUpdateRoom = async (
+    description: string,
+    meetLink: string,
+    date: string,
+    topic: string,
+    userId: string
+  ) => {
     try {
-      await user.createRoom(
-        logedUser.id,
-        data.topic,
-        data.description,
-        data.meetLink,
-        data.date
-      );
-      setSnackMessage('Sala Criada com Sucesso!!!');
+      let message = '';
+      if (mode == 'create') {
+        message = 'Sala Criada com Sucesso!!!';
+        await user.createRoom(description, meetLink, date, topic, userId);
+      } else {
+        message = 'Sala Editada com Sucesso!!!';
+        await user.updateRoom(
+          id || '',
+          description,
+          meetLink,
+          date,
+          topic,
+          userId
+        );
+      }
+      setSnackMessage(message);
       setShowSnack(true);
       resetForm();
     } catch (error: any) {
-      const { response } = error;
-      setSnackMessage(response.data.message);
-      setShowSnack(true);
-      resetForm();
+      setSnackMessage(error);
     } finally {
       setLoading(false);
     }
@@ -182,7 +189,11 @@ export default function CreateRoom() {
             ></BaseSelect>
           </Col>
         </Row>
-        <BaseButton loading={loading} type='submit' text='Criar Encontro' />
+        <BaseButton
+          loading={loading}
+          type='submit'
+          text={mode == 'create' ? 'Criar Encontro' : 'Editar Encontro'}
+        />
       </form>
       <SnackBar
         active={showSnack}

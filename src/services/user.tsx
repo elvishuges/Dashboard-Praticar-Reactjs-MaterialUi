@@ -16,6 +16,24 @@ export async function createRoom(
   });
   return response.data;
 }
+
+export async function updateRoom(
+  roomId: string,
+  userId: string,
+  topicId: string,
+  description: string,
+  meetLink: string,
+  date: string
+): Promise<any> {
+  const response = await api.put<any>(`/room/${roomId}`, {
+    userId,
+    topicId,
+    description,
+    meetLink,
+    date,
+  });
+  return response.data;
+}
 export async function getAllRoom(): Promise<any> {
   const response = await api.get<any>('/room');
   return response.data;

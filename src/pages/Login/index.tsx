@@ -62,6 +62,7 @@ export default function Login() {
               required: 'Campo Obrigatório',
             })}
             name='password'
+            type='password'
             value={password}
             onChange={(e: any) => setPassword(e.target.value)}
             placeholder='Password'

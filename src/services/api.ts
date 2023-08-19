@@ -1,18 +1,24 @@
 import axios from 'axios';
+import LocalStorageService from './localstorage';
 interface User {
-  token: string;
+  accessToken: string;
 }
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Function to get the token from localStorage
 const getTokenFromLocalStorage = (): string | null => {
-  const userString = localStorage.getItem('@change-my-mind:user');
+  const userString = LocalStorageService.getItem('@change-my-mind:user');
+  console.log('2222', userString);
+
   if (userString) {
-    const user: User = JSON.parse(userString);
-    return user.token;
+    const user: User = userString;
+    return user.accessToken;
   }
   return null;
 };
@@ -20,6 +26,7 @@ const getTokenFromLocalStorage = (): string | null => {
 // Add an interceptor to attach the authorization header to each request
 api.interceptors.request.use((config) => {
   const accessToken = getTokenFromLocalStorage();
+
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
