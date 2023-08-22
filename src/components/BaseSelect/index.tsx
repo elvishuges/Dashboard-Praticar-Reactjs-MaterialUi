@@ -1,120 +1,84 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Container, ContainerInput, OptionList } from './style';
 
 //github.com/orgs/react-hook-form/discussions/2825
 
-https: type Option = {
+type Option = {
   value: string;
   label: string;
 };
 
-interface SelectElementProps {
-  options: Option[];
-  defaultValue?: string;
-  name: string;
-  value?: string;
-  onChange?: (e: any) => void;
-  placeholder: string;
-  error?: any;
+interface SelectElementProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  customOptions: Option[];
+  error?: string;
 }
 
-const BaseSelect = React.forwardRef<HTMLSelectElement, SelectElementProps>(
-  (
-    {
-      options,
-      defaultValue,
-      name,
-      value,
-      onChange,
-      placeholder,
-      error,
-      ...rest
-    }: SelectElementProps,
-    ref
-  ) => {
-    const selectRef = useRef(null);
-    const [selected, setSelected] = useState(value);
-    const [isOpen, setOpen] = useState(false);
+const BaseSelect = ({
+  error,
+  customOptions,
+  onChange,
+  ...rest
+}: SelectElementProps) => {
+  const [isOpen, setOpen] = useState(false);
 
-    useEffect(() => {
-      const element = document.getElementById(name);
-      console.log('element', element);
+  const selectedValue = rest.value;
 
-      if (element) {
-        (element as HTMLSelectElement).value = selected as string;
-        if (onChange) {
-          onChange(selected);
-        }
-      }
-    }, [selected]);
+  // pass the selected value to the parent component
 
-    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      if (onChange) {
-        onChange(e.target.value);
-      }
-    };
+  const handleSelect = (value: string) => {
+    if (!onChange) return console.log('onChange is not defined');
 
-    const onOnptionClick = (value: any) => {
-      setSelected(value);
-      setOpen(!isOpen);
-    };
+    const fakeChangeEvent = {
+      target: {
+        value,
+      },
+    } as React.ChangeEvent<HTMLSelectElement>;
 
-    return (
-      <Container className='container-base-combobox'>
-        <select
-          className='html-select'
-          onChange={(e: any) => onChangeSelect(e)}
-          value={value}
-          ref={ref}
-          name={name}
-          id={name}
-          {...rest}
-        >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <div ref={selectRef}>
-          <div>
-            <ContainerInput onClick={() => setOpen((prev) => !prev)}>
-              <div className='custom-select__trigger'>
-                <span>
-                  {options.find((item) => item.value === selected)?.label ||
-                    'Select'}
-                </span>
-                <div className='arrow'></div>
-              </div>
-            </ContainerInput>
-            <OptionList
-              open={isOpen}
-              className={`option-container ${isOpen && 'open'}`}
-            >
-              {options.map((item) => (
-                <div
-                  key={item.value}
-                  onClick={() => {
-                    onOnptionClick(item.value);
-                  }}
+    onChange(fakeChangeEvent);
+    setOpen(false);
+  };
+
+  return (
+    <Container className='container-base-combobox'>
+      <select>
+        {customOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <div>
+        <div>
+          <ContainerInput onClick={() => setOpen((prev) => !prev)}>
+            <div className='custom-select__trigger'>
+              <span>{selectedValue || 'Select'}</span>
+              <div className='arrow'></div>
+            </div>
+          </ContainerInput>
+          <OptionList
+            open={isOpen}
+            className={`option-container ${isOpen && 'open'}`}
+            onBlur={() => setOpen(false)}
+          >
+            {customOptions.map((item) => (
+              <div key={item.value} onClick={() => handleSelect(item.value)}>
+                <span
+                  className={`custom-option ${
+                    selectedValue === item.value && 'selected'
+                  } `}
+                  data-value={item.value}
                 >
-                  <span
-                    className={`custom-option ${
-                      selected === item.value && 'selected'
-                    } `}
-                    data-value={item.value}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </OptionList>
-          </div>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </OptionList>
         </div>
-        {error && <div className='error-message'>{error.message}</div>}
-      </Container>
-    );
-  }
-);
+      </div>
+      {error && <div className='error-message'>{error}</div>}
+    </Container>
+  );
+};
 
 export default BaseSelect;
