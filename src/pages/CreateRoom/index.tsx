@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
-import BaseInput from '../../components/BaseInput';
-import BaseButton from '../../components/BaseButton';
-import { SubmitHandler, useForm } from 'react-hook-form';
-
 import { Col, Row } from 'react-grid-system';
-import { Container } from './style';
-import * as user from './../../services/user';
-import BaseSelect from '../../components/BaseSelect';
-import LocalStorageService from '../../services/localstorage';
-import SnackBar from '../../components/utils/SnackBar';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import BaseButton from '../../components/BaseButton';
+import BaseInput from '../../components/BaseInput';
+import BaseSelect from '../../components/BaseSelect';
+import SnackBar from '../../components/utils/SnackBar';
+import LocalStorageService from '../../services/localstorage';
 import { RoomData } from '../../types/RoomDTO';
+import * as user from './../../services/user';
+import { Container } from './style';
 
 type FormInputs = {
   description: string;
@@ -29,6 +28,17 @@ type Topic = {
   description: string;
 };
 
+const options: Option[] = [
+  {
+    value: '954afa7f-88b0-4bdc-a869-3a51a3e1b49a',
+    label: 'Aleatório',
+  },
+  {
+    value: '954afa1231231369-3a51a3e1b49a',
+    label: 'Aleatório 2',
+  },
+];
+
 export default function CreateRoom() {
   let { id } = useParams();
 
@@ -36,32 +46,29 @@ export default function CreateRoom() {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
-  } = useForm<FormInputs>({ mode: 'onChange' });
+    reset,
+    watch,
+    formState: { errors, isLoading },
+  } = useForm<FormInputs>({
+    defaultValues: {
+      description: '',
+      meetLink: '',
+      date: '',
+    },
+    mode: 'onChange',
+  });
 
-  const [startDate, setStartDate] = useState('');
-  const [description, setDescription] = useState('');
-  const [meetLink, setMeetLink] = useState('');
-  const [topic, setTopic] = useState('');
+  const { topic } = watch();
+  console.log('topic', topic);
 
   const [room, serRoom] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [snackMessage, setSnackMessage] = useState('Hello');
   const [selectOption, setSelectOption] = useState<Option[]>([]);
   const [mode, setMode] = useState('create');
   //const [startDate, setDate] = useState(new Date());
-  const options: Option[] = [];
 
-  useEffect(() => {
-    setMode('create');
-    loadTopics();
-    if (id) {
-      setMode('update');
-      loadRoomById(id);
-    }
-  }, []);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadRoomById = async (id: string) => {
     try {
       const room: RoomData = await user.getRoomById(id);
@@ -74,6 +81,14 @@ export default function CreateRoom() {
       console.error('Error fetching rooms:', error);
     }
   };
+  useEffect(() => {
+    setMode('create');
+    loadTopics();
+    if (id) {
+      setMode('update');
+      loadRoomById(id);
+    }
+  }, [id, loadRoomById]);
 
   const loadTopics = async () => {
     try {
@@ -95,7 +110,7 @@ export default function CreateRoom() {
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     const logedUser = LocalStorageService.getItem('@change-my-mind:user');
-    setLoading(true);
+
     await createUpdateRoom(
       logedUser.id,
       data.topic,
@@ -130,17 +145,10 @@ export default function CreateRoom() {
       }
       setSnackMessage(message);
       setShowSnack(true);
-      resetForm();
+      reset();
     } catch (error: any) {
       setSnackMessage(error);
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const resetForm = () => {
-    setMeetLink('');
-    setDescription('');
   };
 
   return (
@@ -151,15 +159,13 @@ export default function CreateRoom() {
             required: 'Campo Obrigatório',
           })}
           name='description'
-          placeholder='Descrição '
-          onChange={(e: any) => setDescription(e.target.value)}
-          error={errors.description}
+          placeholder='Descrição'
+          error={errors.description?.message}
         />
         <BaseInput
           {...register('meetLink', {
             required: false,
           })}
-          onChange={(e: any) => setMeetLink(e.target.value)}
           placeholder='Link Meet (Adicionar caso o evento estiver próximo)'
         />
         <Row>
@@ -170,29 +176,25 @@ export default function CreateRoom() {
               })}
               type='datetime-local'
               placeholder='Data'
-              onChange={(e: any) => setStartDate(e.target.value)}
-              error={errors.date}
+              error={errors.date?.message}
             />
           </Col>
         </Row>
         <Row>
-          {}
           <Col sm={6}>
             <BaseSelect
               {...register('topic', {
                 required: 'Campo Obrigatório',
               })}
-              placeholder='Topic'
               name='topic'
-              value={topic}
-              options={selectOption}
-              onChange={(value) => setTopic(value)}
-              error={errors.topic}
-            ></BaseSelect>
+              error={errors.topic?.message}
+              customOptions={options}
+              onChange={(e) => setValue('topic', e.target.value)}
+            />
           </Col>
         </Row>
         <BaseButton
-          loading={loading}
+          loading={isLoading}
           type='submit'
           text={mode == 'create' ? 'Criar Encontro' : 'Editar Encontro'}
         />
