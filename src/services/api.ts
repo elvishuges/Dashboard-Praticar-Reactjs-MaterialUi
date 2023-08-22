@@ -14,7 +14,6 @@ const api = axios.create({
 // Function to get the token from localStorage
 const getTokenFromLocalStorage = (): string | null => {
   const userString = LocalStorageService.getItem('@change-my-mind:user');
-  console.log('2222', userString);
 
   if (userString) {
     const user: User = userString;

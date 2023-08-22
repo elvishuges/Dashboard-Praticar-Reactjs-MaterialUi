@@ -37,7 +37,7 @@ export default function CreateRoom() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormInputs>({ mode: 'onBlur' });
+  } = useForm<FormInputs>({ mode: 'onChange' });
 
   const [startDate, setStartDate] = useState('');
   const [description, setDescription] = useState('');
@@ -151,7 +151,7 @@ export default function CreateRoom() {
             required: 'Campo Obrigatório',
           })}
           name='description'
-          placeholder='Descrição (ex: Vue é melhor que React)'
+          placeholder='Descrição '
           onChange={(e: any) => setDescription(e.target.value)}
           error={errors.description}
         />
@@ -176,6 +176,7 @@ export default function CreateRoom() {
           </Col>
         </Row>
         <Row>
+          {}
           <Col sm={6}>
             <BaseSelect
               {...register('topic', {
@@ -183,6 +184,7 @@ export default function CreateRoom() {
               })}
               placeholder='Topic'
               name='topic'
+              value={topic}
               options={selectOption}
               onChange={(value) => setTopic(value)}
               error={errors.topic}

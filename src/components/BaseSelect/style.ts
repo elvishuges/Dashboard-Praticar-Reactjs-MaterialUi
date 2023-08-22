@@ -1,12 +1,23 @@
 import { styled } from 'styled-components';
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+interface ContainerProps {
+  borderRadius?: string;
+  active?: string;
+}
+interface ContainerInputProps {
+  borderRadius?: string;
+  active?: string;
+}
+interface OptionListProps {
+  open: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
+  width: 100%;
+  padding-bottom: 15px;
   position: relative;
-  height: 80px;
   .html-select {
-    display: block;
+    display: none;
   }
   .error-message {
     color: red;
@@ -14,24 +25,26 @@ export const Container = styled.div`
   }
 `;
 
-export const ContainerCustomSelect = styled.div`
-  position: relative;
-  user-select: none;
-  width: 80%;
-`;
-export const ContainerSelect = styled.select`
-  padding: 12px;
-  height: 53px;
-  font-size: 16px;
+export const ContainerInput = styled.div<ContainerInputProps>`
   font-family: 'Arial';
   display: flex;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background-color: #f5f5f5;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid;
   border-color: #f5f5f5;
   border-bottom-color: #a5a5a5;
-  width: 100%;
+  border-top-left-radius: ${(props) => props.borderRadius || '5px'};
+  border-top-right-radius: ${(props) => props.borderRadius || '5px'};
+  color: palevioletred;
   background-color: #f5f5f5;
+  border: 0;
   outline: none;
+  height: 35px;
+  padding-top: 15px;
+  font-size: 16px;
+  color: #818181;
+
   &:hover {
     background-color: #eeee;
     border-bottom: 2px solid;
@@ -41,18 +54,30 @@ export const ContainerSelect = styled.select`
   }
 `;
 
-export const OptionList = styled.div`
+export const OptionList = styled.div<OptionListProps>`
   position: absolute;
-  top: 100%;
   left: 0;
-  z-index: 1;
+  right: 0;
   width: 100%;
+  display: ${(props) => (props.open ? 'block' : 'none')};
+  background: white;
+  transition: all 0.5s;
+  z-index: 100;
   max-height: 200px;
   overflow-y: auto;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer !important;
+
+  .custom-option {
+    position: relative;
+    display: block;
+    padding: 5px 8px;
+    transition: all 0.5s;
+    height: 40px;
+    &:hover {
+      background-color: #e4e4e4;
+    }
+  }
 `;
 
 type OptionItemProps = {
