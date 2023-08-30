@@ -11,6 +11,7 @@ import LocalStorageService from '../../services/localstorage';
 import SnackBar from '../../components/utils/SnackBar';
 import { useParams } from 'react-router-dom';
 import { RoomData } from '../../types/RoomDTO';
+import { TextField } from '@mui/material';
 
 type FormInputs = {
   description: string;
@@ -178,17 +179,11 @@ export default function CreateRoom() {
         <Row>
           {}
           <Col sm={6}>
-            <BaseSelect
-              {...register('topic', {
-                required: 'Campo Obrigatório',
-              })}
-              placeholder='Topic'
-              name='topic'
-              value={topic}
-              options={selectOption}
-              onChange={(value) => setTopic(value)}
-              error={errors.topic}
-            ></BaseSelect>
+            <TextField
+              id='outlined-basic'
+              label='Outlined'
+              variant='outlined'
+            />
           </Col>
         </Row>
         <BaseButton

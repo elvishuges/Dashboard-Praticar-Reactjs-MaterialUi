@@ -6,7 +6,8 @@ import BaseInput from '../../components/BaseInput';
 import BaseButton from '../../components/BaseButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/auth';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Box, Button, TextField, Stack } from '@mui/material';
 
 type FormInputs = {
   email: string;
@@ -25,16 +26,18 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [alertMessage, setAlertMessagte] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
       setIsLoading(true);
-      setAlertMessagte('');
+      setAlertMessage('');
       await login(data.email, data.password);
       navigate('/');
     } catch (error) {
-      setAlertMessagte('Email ou Senha inválidos');
+      console.log('error', error);
+
+      setAlertMessage('Email ou Senha inválidos');
     } finally {
       setIsLoading(false);
     }
@@ -42,41 +45,46 @@ export default function Login() {
 
   return (
     <Container>
-      <BaseCard title='Sign Up'>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <BaseInput
-            {...register('email', {
-              required: 'Campo Obrigatório',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'invalid field.',
-              },
-            })}
-            value={email}
-            onChange={(e: any) => setEmail(e.target.value)}
-            placeholder='Email'
-            error={errors.email}
-          ></BaseInput>
-          <BaseInput
-            {...register('password', {
-              required: 'Campo Obrigatório',
-            })}
-            name='password'
-            type='password'
-            value={password}
-            onChange={(e: any) => setPassword(e.target.value)}
-            placeholder='Password'
-            error={errors.password}
-          ></BaseInput>
-          <BaseButton
-            loading={isLoading}
-            type='submit'
-            background='#222222'
-            text='Submit'
-          />
-          {alertMessage && <div className='error_message'> {alertMessage}</div>}
-        </form>
-      </BaseCard>
+      <h2>Login</h2>
+      <Box
+        m={1} //margin
+        display='flex'
+        justifyContent='flex-start'
+        alignItems='flex-start'
+      ></Box>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <TextField
+          type='email'
+          variant='outlined'
+          color='secondary'
+          label='Email'
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          required
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          type='password'
+          variant='outlined'
+          color='secondary'
+          label='Password'
+          required
+          fullWidth
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          sx={{ mb: 2 }}
+        />
+        {alertMessage && <div className='error_message'> {alertMessage}</div>}
+        <Box display='flex' justifyContent='flex-end' alignItems='flex-end'>
+          <Button variant='outlined' color='secondary' type='submit'>
+            Login
+          </Button>
+        </Box>
+      </form>
+      <small>
+        Não possue uma conta? <Link to='/register'>Cadatro</Link>
+      </small>
     </Container>
   );
 }
