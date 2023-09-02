@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { Container } from './style';
-import BaseCard from '../../components/BaseCard';
-import { Col, Row } from 'react-grid-system';
-import BaseInput from '../../components/BaseInput';
-import BaseButton from '../../components/BaseButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/auth';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Stack } from '@mui/material';
 
 type FormInputs = {
@@ -58,8 +54,7 @@ export default function Login() {
           variant='outlined'
           color='secondary'
           label='Email'
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          {...register('email', { required: true })}
           required
           fullWidth
           sx={{ mb: 2 }}
@@ -70,14 +65,18 @@ export default function Login() {
           color='secondary'
           label='Password'
           required
+          {...register('password', { required: true })}
           fullWidth
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
           sx={{ mb: 2 }}
         />
         {alertMessage && <div className='error_message'> {alertMessage}</div>}
         <Box display='flex' justifyContent='flex-end' alignItems='flex-end'>
-          <Button variant='outlined' color='secondary' type='submit'>
+          <Button
+            disabled={isLoading}
+            variant='outlined'
+            color='secondary'
+            type='submit'
+          >
             Login
           </Button>
         </Box>

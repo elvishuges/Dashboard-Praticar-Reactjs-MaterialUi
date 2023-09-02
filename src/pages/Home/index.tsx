@@ -3,13 +3,10 @@ import { useEffect, useState } from 'react';
 import BaseButton from '../../components/BaseButton';
 
 import { Container } from './style';
-import RoomCard from '../../components/RoomCard';
-import { Col, Row } from 'react-grid-system';
 import { useNavigate } from 'react-router-dom';
 import * as user from './../../services/user';
-import BaseInput from '../../components/BaseInput';
-import BaseSelect from '../../components/BaseSelect';
 import { RoomData } from '../../types/RoomDTO';
+import WeekDashboard from '../../components/WeekDashboard';
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
 // select
@@ -37,32 +34,12 @@ export default function Home() {
       setRooms(roomsData);
     } catch (error) {
       console.error('Error fetching rooms:', error);
-      alert(`'Error fetching rooms:', ${error}`);
     }
   };
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <BaseInput placeholder='Buscar'></BaseInput>
-        </Col>
-      </Row>
-      <Row>
-        {rooms.map((room) => (
-          <Col xs={12} sm={6} md={3} key={room.idRoom}>
-            <RoomCard room={room} />
-          </Col>
-        ))}
-      </Row>
-      <div className='footer-button'>
-        <BaseButton
-          background='#222222'
-          type='button'
-          onButtonClick={handleCreateRoom}
-          text='Criar Encontro'
-        ></BaseButton>
-      </div>
+      <WeekDashboard />
     </Container>
   );
 }

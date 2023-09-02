@@ -1,9 +1,15 @@
-import { useNavigate } from 'react-router-dom';
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import { ButtonBase } from '@mui/material';
 import { useAuth } from '../../hooks/auth';
-import BaseButton from '../BaseButton';
-import { LogoutButton, NavbarContainer, Title } from './style';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+export default function ButtonAppBar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -16,18 +22,22 @@ const Navbar = () => {
   };
 
   return (
-    <NavbarContainer>
-      <Title onClick={handleHomeClick}>Change My Mind</Title>
-      <div className='button-logout'>
-        <BaseButton
-          type='button'
-          text='Logout'
-          background='#222222'
-          onButtonClick={handleLogout}
-        />
-      </div>
-    </NavbarContainer>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position='static'>
+        <Toolbar>
+          <Typography
+            onClick={handleHomeClick}
+            variant='h6'
+            component='div'
+            sx={{ flexGrow: 1 }}
+          >
+            Área de Estudos
+          </Typography>
+          <Button onClick={handleLogout} color='inherit'>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
-};
-
-export default Navbar;
+}
