@@ -1,94 +1,84 @@
 import React from 'react';
-import AddIcon from '@mui/icons-material/Add';
 import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableContainer,
+  Container,
+  Grid,
   Paper,
+  Typography,
   Card,
   CardContent,
   CardActions,
   Button,
-  Fab,
 } from '@mui/material';
-import { Container } from './style';
+import { WeekDashboardContainer } from './style';
 
-type DaysOfWeekHeader = {
+type DaysOfWeek = {
+  bgColor: string;
   label: string;
-  color: string;
+  subjects: Subject[];
 };
-type DayOfWeekItem = {
+type Subject = {
   description: string;
-  dayOfWeek: string;
-  color: string;
 };
-// Componente que renderiza a tabela de dias da semana com cards
-const WeekDaysTable: React.FC = () => {
-  const daysOfWeekHeader: DaysOfWeekHeader[] = [
-    { label: 'Domingo', color: 'red' },
-    { label: 'Segunda', color: 'blue' },
-    { label: 'Terça', color: 'green' },
-    { label: 'Quarta', color: 'orange' },
-    { label: 'Quinta', color: 'purple' },
-    { label: 'Sexta', color: 'cyan' },
-    { label: 'Sábado', color: 'magenta' },
-  ];
+const daysOfWeek: DaysOfWeek[] = [
+  {
+    label: 'Segunda',
+    bgColor: 'red',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Terça',
+    bgColor: 'green',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Quarta',
+    bgColor: 'grey',
+    subjects: [{ description: 'Matemática' }],
+  },
+  { label: 'Quita', bgColor: 'red', subjects: [{ description: 'Matemática' }] },
+  { label: 'Sexta', bgColor: 'red', subjects: [{ description: 'Matemática' }] },
+  {
+    label: 'Sabado',
+    bgColor: 'red',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Domingo',
+    bgColor: 'red',
+    subjects: [{ description: 'Matemática' }],
+  },
+];
 
-  // Função para exibir o conteúdo do card com base no dia da semana
-  const renderCardContent = (day: DaysOfWeekHeader) => (
-    <CardContent style={{ paddingInline: 10, paddingTop: 5 }}>
-      <p>Atividades para {day.color}:</p>
-      {/* Adicione aqui o conteúdo do card para o dia específico */}
-    </CardContent>
-  );
-
+const WeekDashboard = () => {
   return (
-    <Container>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {daysOfWeekHeader.map((day, index) => (
-                <TableCell
-                  key={index}
-                  align='center'
-                  style={{ width: '14%', background: day.color }}
-                >
-                  {day.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableRow>
-            {daysOfWeekHeader.map((day, index) => (
-              <TableCell
-                key={index}
-                style={{
-                  width: '14%',
-                  verticalAlign: 'top',
-                }}
-              >
-                <Paper elevation={10}>{renderCardContent(day)}</Paper>
-              </TableCell>
-            ))}
-          </TableRow>
-        </Table>
-      </TableContainer>
-      <Fab
-        sx={{
-          position: 'fixed',
-          bottom: (theme) => theme.spacing(2),
-          right: (theme) => theme.spacing(2),
-        }}
-        color='primary'
-        aria-label='add'
-      >
-        <AddIcon />
-      </Fab>
-    </Container>
+    <WeekDashboardContainer>
+      {daysOfWeek.map((day, index) => (
+        <Paper key={index} style={{ width: '14%', margin: '0px' }}>
+          <Typography
+            variant='h6'
+            align='center'
+            style={{ padding: '16px', background: day.bgColor }}
+          >
+            {day.label}
+          </Typography>
+          <div>
+            <Paper
+              elevation={20}
+              style={{ textAlign: 'center', padding: '15px', margin: '5px' }}
+            >
+              C
+            </Paper>
+            <Paper
+              elevation={20}
+              style={{ textAlign: 'center', padding: '15px', margin: '5px' }}
+            >
+              C
+            </Paper>
+          </div>
+        </Paper>
+      ))}
+    </WeekDashboardContainer>
   );
 };
 
-export default WeekDaysTable;
+export default WeekDashboard;

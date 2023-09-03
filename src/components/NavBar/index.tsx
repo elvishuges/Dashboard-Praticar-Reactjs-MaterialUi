@@ -9,7 +9,7 @@ import { ButtonBase } from '@mui/material';
 import { useAuth } from '../../hooks/auth';
 import { useNavigate } from 'react-router-dom';
 
-export default function ButtonAppBar() {
+export default function NavBar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
 

@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  height: 100%;
+export const WeekDashboardContainer = styled.div`
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 `;
