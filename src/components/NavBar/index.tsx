@@ -23,15 +23,15 @@ export default function NavBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
-        <Toolbar>
+      <AppBar position='static' color='secondary'>
+        <Toolbar style={{ cursor: 'pointer' }}>
           <Typography
             onClick={handleHomeClick}
             variant='h6'
             component='div'
             sx={{ flexGrow: 1 }}
           >
-            Área de Estudos
+            Quadro Semanal
           </Typography>
           <Button onClick={handleLogout} color='inherit'>
             Logout

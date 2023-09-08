@@ -18,32 +18,64 @@ type Option = {
   value: string;
   label: string;
 };
+
+type DaysOfWeekProps = {
+  bgColor: string;
+  label: string;
+  subjects: Subject[];
+};
+type Subject = {
+  description: string;
+};
+const daysOfWeek: DaysOfWeekProps[] = [
+  {
+    label: 'Segunda',
+    bgColor: '#034485',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Terça',
+    bgColor: '#D1382E',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Quarta',
+    bgColor: '#13599E',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Quinta',
+    bgColor: '#1510DE',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Sexta',
+    bgColor: '#BCD104',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Sabado',
+    bgColor: '#0A2E52',
+    subjects: [{ description: 'Matemática' }],
+  },
+  {
+    label: 'Domingo',
+    bgColor: 'red',
+    subjects: [{ description: 'Matemática' }],
+  },
+];
+
 export default function Home() {
   const navigate = useNavigate();
-  const [rooms, setRooms] = useState<RoomData[]>([]);
   const [openDialog, setOpendialog] = useState(false);
-  const [selectOption, setSelectOption] = useState<Option[]>([]);
 
   const handleCreateRoom = () => {
     navigate('/create-room');
   };
 
-  useEffect(() => {
-    fetchRooms();
-  }, []);
-
-  const fetchRooms = async () => {
-    try {
-      const roomsData: RoomData[] = await user.getAllRoom();
-      setRooms(roomsData);
-    } catch (error) {
-      console.error('Error fetching rooms:', error);
-    }
-  };
-
   return (
     <Container>
-      <WeekDashboard />
+      <WeekDashboard items={daysOfWeek} />
       <Fab
         sx={{
           position: 'fixed',
@@ -52,6 +84,7 @@ export default function Home() {
         }}
         color='primary'
         aria-label='add'
+        variant='extended'
         onClick={() => setOpendialog(true)}
       >
         <AddIcon />

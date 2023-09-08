@@ -67,7 +67,7 @@ export default function Login() {
           required
           {...register('password', { required: true })}
           fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 1 }}
         />
         {alertMessage && <div className='error_message'> {alertMessage}</div>}
         <Box display='flex' justifyContent='flex-end' alignItems='flex-end'>

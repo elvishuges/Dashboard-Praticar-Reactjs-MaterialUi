@@ -7,42 +7,28 @@ import {
   Box,
   DialogTitle,
   TextField,
-  Select,
-  SelectChangeEvent,
   InputLabel,
 } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Chip from '@mui/material/Chip';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 type CreateSubjectDialogProp = {
   open: boolean;
   setOpen: (value: boolean) => void;
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+const daysWeek = [
+  'Segunda',
+  'Terça',
+  'Quarta',
+  'Quinta',
+  'Sexta',
+  'Sábado',
+  'Domingo',
 ];
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 9.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
   open,
@@ -52,24 +38,21 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
     console.log('submit');
   };
 
-  const [personName, setPersonName] = React.useState<string[]>([]);
+  const [personName, setPersonName] = React.useState('');
 
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    );
+  const handleChange = (event: SelectChangeEvent) => {
+    setPersonName(event.target.value);
   };
 
   return (
     <Dialog fullWidth open={open}>
-      <DialogTitle>Adicionar Item</DialogTitle>
+      <DialogTitle style={{ background: '#1976d2', color: '#fff' }}>
+        Adicionar Item
+      </DialogTitle>
       <form>
         <DialogContent>
           <TextField
+            style={{ paddingBottom: 20 }}
             autoFocus
             margin='dense'
             id='description'
@@ -77,24 +60,14 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
             fullWidth
             required
           />
-          <FormControl fullWidth style={{ marginTop: 20 }} required>
-            <InputLabel id='demo-multiple-chip-label'>Dia da Semana</InputLabel>
+          <FormControl fullWidth required>
             <Select
-              labelId='demo-multiple-chip-label'
-              id='demo-multiple-chip'
+              placeholder='Dia'
               value={personName}
               onChange={handleChange}
-              input={<OutlinedInput id='select-multiple-chip' label='Chip' />}
-              renderValue={(selected: any) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value: any) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
+              inputProps={{ 'aria-label': 'Without label' }}
             >
-              {names.map((name) => (
+              {daysWeek.map((name) => (
                 <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
