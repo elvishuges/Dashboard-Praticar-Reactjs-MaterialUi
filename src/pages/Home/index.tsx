@@ -10,13 +10,13 @@ import WeekDashboard from '../../components/WeekDashboard';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CreateSubjectDialog from '../../components/modals/CreateSubjectDialog';
+import { throws } from 'assert';
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
 // select
-
-type Option = {
-  value: string;
+type FormType = {
   label: string;
+  weekDay: string;
 };
 
 type DaysOfWeekProps = {
@@ -31,37 +31,37 @@ const daysOfWeek: DaysOfWeekProps[] = [
   {
     label: 'Segunda',
     bgColor: '#034485',
-    subjects: [{ description: 'Matemática' }],
+    subjects: [],
   },
   {
     label: 'Terça',
     bgColor: '#D1382E',
-    subjects: [{ description: 'Matemática' }],
+    subjects: [],
   },
   {
     label: 'Quarta',
     bgColor: '#13599E',
-    subjects: [{ description: 'Matemática' }],
+    subjects: [],
   },
   {
     label: 'Quinta',
     bgColor: '#1510DE',
-    subjects: [{ description: 'Matemática' }],
+    subjects: [],
   },
   {
     label: 'Sexta',
     bgColor: '#BCD104',
-    subjects: [{ description: 'Matemática' }],
+    subjects: [],
   },
   {
-    label: 'Sabado',
+    label: 'Sábado',
     bgColor: '#0A2E52',
-    subjects: [{ description: 'Matemática' }],
+    subjects: [],
   },
   {
     label: 'Domingo',
     bgColor: 'red',
-    subjects: [{ description: 'Matemática' }],
+    subjects: [],
   },
 ];
 
@@ -69,10 +69,27 @@ export default function Home() {
   const navigate = useNavigate();
   const [openDialog, setOpendialog] = useState(false);
 
-  const handleCreateRoom = () => {
-    navigate('/create-room');
+  const onCreateSubject = (form: FormType) => {
+    addSubjectInWeekDay(form);
+    setOpendialog(false);
   };
-
+  const addSubjectInWeekDay = (form: FormType) => {
+    let added = false;
+    try {
+      for (let index = 0; index < daysOfWeek.length; index++) {
+        if (daysOfWeek[index].label == form.weekDay) {
+          const subject: Subject = { description: form.label };
+          daysOfWeek[index].subjects.push(subject);
+          added = true;
+        }
+      }
+      if (!added) {
+        throw Error('Dia Da Senana Não Encontrado');
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
   return (
     <Container>
       <WeekDashboard items={daysOfWeek} />
@@ -91,6 +108,7 @@ export default function Home() {
       </Fab>
       <CreateSubjectDialog
         open={openDialog}
+        onCreate={(form: FormType) => onCreateSubject(form)}
         setOpen={(value) => setOpendialog(value)}
       />
     </Container>

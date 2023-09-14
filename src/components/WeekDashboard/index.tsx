@@ -10,6 +10,7 @@ import {
   Button,
   Fab,
 } from '@mui/material';
+import Chip from '@mui/material/Chip';
 import { WeekDashboardContainer } from './style';
 
 type WeekDashboardProps = {
@@ -34,7 +35,20 @@ const WeekDashboard: React.FC<WeekDashboardProps> = ({ items }) => {
           >
             {day.label}
           </Typography>
-          <div></div>
+          {day.subjects.map((subject, index) => (
+            <div style={{ width: 'auto', marginTop: 10, marginInline: 10 }}>
+              <Chip
+                sx={{
+                  'height': 'auto',
+                  '& .MuiChip-label': {
+                    whiteSpace: 'normal',
+                    margin: 1,
+                  },
+                }}
+                label={subject.description}
+              />
+            </div>
+          ))}
         </Paper>
       ))}
     </WeekDashboardContainer>

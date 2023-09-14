@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -14,11 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Chip from '@mui/material/Chip';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
-type CreateSubjectDialogProp = {
-  open: boolean;
-  setOpen: (value: boolean) => void;
-};
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 const daysWeek = [
   'Segunda',
@@ -30,28 +26,56 @@ const daysWeek = [
   'Domingo',
 ];
 
+type CreateSubjectDialogProp = {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+  onCreate: (form: FormInputs) => void;
+};
+
+type FormInputs = {
+  label: string;
+  weekDay: string;
+};
+
 const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
   open,
   setOpen,
+  onCreate,
 }) => {
-  const handleFormSubmit = () => {
-    console.log('submit');
+  const [weekDay, setWeekDay] = useState('');
+  const [label, setLabel] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>({ mode: 'onChange' });
+
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    const form: FormInputs = {
+      label: data.label,
+      weekDay: data.weekDay,
+    };
+    onCreate(form);
   };
 
-  const [personName, setPersonName] = React.useState('');
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setPersonName(event.target.value);
-  };
+  useEffect(() => {
+    setWeekDay('');
+  }, [open]);
 
   return (
     <Dialog fullWidth open={open}>
       <DialogTitle style={{ background: '#1976d2', color: '#fff' }}>
         Adicionar Item
       </DialogTitle>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <TextField
+            {...register('label', {
+              required: 'Campo Obrigatório',
+            })}
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
             style={{ paddingBottom: 20 }}
             autoFocus
             margin='dense'
@@ -62,9 +86,12 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
           />
           <FormControl fullWidth required>
             <Select
+              {...register('weekDay', {
+                required: 'Campo Obrigatório',
+              })}
+              value={weekDay}
+              onChange={(e) => setWeekDay(e.target.value)}
               placeholder='Dia'
-              value={personName}
-              onChange={handleChange}
               inputProps={{ 'aria-label': 'Without label' }}
             >
               {daysWeek.map((name) => (
