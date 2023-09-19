@@ -1,16 +1,12 @@
-import { useEffect, useState } from 'react';
-
-import BaseButton from '../../components/BaseButton';
+import { useState } from 'react';
 
 import { Container } from './style';
 import { useNavigate } from 'react-router-dom';
-import * as user from './../../services/user';
-import { RoomData } from '../../types/RoomDTO';
 import WeekDashboard from '../../components/WeekDashboard';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CreateSubjectDialog from '../../components/modals/CreateSubjectDialog';
-import { throws } from 'assert';
+import SnackBar from '../../components/utils/SnackBar';
 //https://www.codevertiser.com/reusable-input-component-react/
 // https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
 // select
@@ -68,10 +64,16 @@ const daysOfWeek: DaysOfWeekProps[] = [
 export default function Home() {
   const navigate = useNavigate();
   const [openDialog, setOpendialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
 
   const onCreateSubject = (form: FormType) => {
     addSubjectInWeekDay(form);
     setOpendialog(false);
+  };
+
+  const onWeekDashboardItemClick = (item: any) => {
+    navigate('subject-details');
   };
   const addSubjectInWeekDay = (form: FormType) => {
     let added = false;
@@ -80,6 +82,8 @@ export default function Home() {
         if (daysOfWeek[index].label == form.weekDay) {
           const subject: Subject = { description: form.label };
           daysOfWeek[index].subjects.push(subject);
+          setShowSnack(true);
+          setSnackMessage('Item cadastrado com sucesso');
           added = true;
         }
       }
@@ -92,7 +96,10 @@ export default function Home() {
   };
   return (
     <Container>
-      <WeekDashboard items={daysOfWeek} />
+      <WeekDashboard
+        onItemClick={(item: any) => onWeekDashboardItemClick(item)}
+        items={daysOfWeek}
+      />
       <Fab
         sx={{
           position: 'fixed',
@@ -110,6 +117,11 @@ export default function Home() {
         open={openDialog}
         onCreate={(form: FormType) => onCreateSubject(form)}
         setOpen={(value) => setOpendialog(value)}
+      />
+      <SnackBar
+        active={showSnack}
+        setActive={() => setShowSnack(false)}
+        message={snackMessage}
       />
     </Container>
   );

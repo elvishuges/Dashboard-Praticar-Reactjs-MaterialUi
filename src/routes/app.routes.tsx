@@ -4,6 +4,7 @@ import { PrivateRoute } from './auth.routes';
 import Login from '../pages/Login';
 import CreateRoom from '../pages/CreateRoom';
 import { useAuth } from '../hooks/auth';
+import SubjectDetails from '../pages/SubjectDetails';
 
 function AppRoutes() {
   const { isLogged } = useAuth();
@@ -12,7 +13,7 @@ function AppRoutes() {
       <Route element={<PrivateRoute />}>
         <Route path='/' element={<Home />} />
         <Route path='/create-room' element={<CreateRoom />} />
-        <Route path='/edit-room/:id' element={<CreateRoom />} />
+        <Route path='/subject-details/' element={<SubjectDetails />} />
       </Route>
       <Route
         path='/login'

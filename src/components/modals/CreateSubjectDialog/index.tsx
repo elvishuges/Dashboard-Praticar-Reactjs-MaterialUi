@@ -61,6 +61,7 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
 
   useEffect(() => {
     setWeekDay('');
+    setLabel('');
   }, [open]);
 
   return (

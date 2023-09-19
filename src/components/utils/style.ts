@@ -11,8 +11,8 @@ export const SnackBarContainer = styled.div`
   transform: translateX(-50%);
   background-color: #333;
   color: #fff;
-  padding: 10px 10px;
-  margin: 10px;
+  padding: 20px 20px;
+  margin: 20px;
   border-radius: 4px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   font-size: 14px;

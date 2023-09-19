@@ -32,7 +32,6 @@ export default function Login() {
       navigate('/');
     } catch (error) {
       console.log('error', error);
-
       setAlertMessage('Email ou Senha inválidos');
     } finally {
       setIsLoading(false);
