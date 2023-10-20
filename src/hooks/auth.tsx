@@ -6,8 +6,8 @@ import LocalStorageService from './../services/localstorage';
 
 type AuthTypeProps = {
   isLogged: boolean;
-  login(email: string, password: string): void;
   logout(): void;
+  login(payload: any): void;
 };
 
 type AuthProviderChildren = {
@@ -22,25 +22,20 @@ export const AuthProvider = ({ children }: AuthProviderChildren) => {
     return !!storedUser;
   });
 
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await auth.login(email, password);
-      LocalStorageService.setItem('@change-my-mind:user', response);
-      LocalStorageService.setItem('@change-my-mind:logged', 'true');
-      setIsLogged(true);
-    } catch (error) {
-      throw new Error('erro');
-    }
-  };
-
   const logout = () => {
     LocalStorageService.removeItem('@change-my-mind:user');
     LocalStorageService.removeItem('@change-my-mind:logged');
     setIsLogged(false);
   };
 
+  const login = (payload: any) => {
+    LocalStorageService.setItem('@change-my-mind:user', payload);
+    LocalStorageService.setItem('@change-my-mind:logged', 'true');
+    setIsLogged(true);
+  };
+
   return (
-    <AuthContext.Provider value={{ isLogged, login, logout }}>
+    <AuthContext.Provider value={{ isLogged, logout, login }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,61 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { Container } from './style';
 import { useNavigate } from 'react-router-dom';
-import WeekDashboard from '../../components/WeekDashboard';
+import SectionDashbaord from '../../components/SectionsDashboard';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CreateSubjectDialog from '../../components/modals/CreateSubjectDialog';
 import SnackBar from '../../components/utils/SnackBar';
-//https://www.codevertiser.com/reusable-input-component-react/
-// https://stackblitz.com/edit/reusable-rhf-ts-pt6?file=src%2Fcomponents%2Forganisms%2Fregistration-form.tsx
-// select
+
+import * as user from './../../services/user';
 type FormType = {
-  label: string;
-  weekDay: string;
+  description: string;
+  sectionId: string;
 };
 
-type DaysOfWeekProps = {
+type Section = {
   bgColor: string;
-  label: string;
+  description: string;
   subjects: Subject[];
 };
 type Subject = {
   description: string;
 };
-const daysOfWeek: DaysOfWeekProps[] = [
+const sections: Section[] = [
   {
-    label: 'Segunda',
+    description: 'Segunda',
     bgColor: '#034485',
     subjects: [],
   },
   {
-    label: 'Terça',
+    description: 'Terça',
     bgColor: '#D1382E',
     subjects: [],
   },
   {
-    label: 'Quarta',
+    description: 'Quarta',
     bgColor: '#13599E',
     subjects: [],
   },
   {
-    label: 'Quinta',
+    description: 'Quinta',
     bgColor: '#1510DE',
     subjects: [],
   },
+
   {
-    label: 'Sexta',
-    bgColor: '#BCD104',
-    subjects: [],
-  },
-  {
-    label: 'Sábado',
-    bgColor: '#0A2E52',
-    subjects: [],
-  },
-  {
-    label: 'Domingo',
+    description: 'Domingo',
     bgColor: 'red',
     subjects: [],
   },
@@ -63,42 +53,59 @@ const daysOfWeek: DaysOfWeekProps[] = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const [openDialog, setOpendialog] = useState(false);
-  const [showSnack, setShowSnack] = useState(false);
-  const [snackMessage, setSnackMessage] = useState('');
+  const [openOpenCreateSubjecDialog, setOpenCreateSubjecDialog] =
+    useState(false);
+  const [showSnackBar, setShowSnackBar] = useState(false);
+  const [sectionsList, setSectionList] = useState([]);
+  const [snackBarMessage, setSnackBarMessage] = useState('');
 
   const onCreateSubject = (form: FormType) => {
-    addSubjectInWeekDay(form);
-    setOpendialog(false);
+    addSubjectInSection(form);
+    setOpenCreateSubjecDialog(false);
   };
 
-  const onWeekDashboardItemClick = (item: any) => {
+  const onSectionDashbaordItemClick = (item: any) => {
     navigate('subject-details');
   };
-  const addSubjectInWeekDay = (form: FormType) => {
+
+  const fetchData = useCallback(async () => {
+    const response = await user.getAllSection();
+
+    setSectionList(response.data);
+  }, []);
+
+  // the useEffect is only there to call `fetchData` at the right time
+  useEffect(() => {
+    fetchData()
+      // make sure to catch any error
+      .catch(console.error);
+  }, [fetchData]);
+
+  const addSubjectInSection = (form: FormType) => {
     let added = false;
     try {
-      for (let index = 0; index < daysOfWeek.length; index++) {
-        if (daysOfWeek[index].label == form.weekDay) {
-          const subject: Subject = { description: form.label };
-          daysOfWeek[index].subjects.push(subject);
-          setShowSnack(true);
-          setSnackMessage('Item cadastrado com sucesso');
+      for (let index = 0; index < sections.length; index++) {
+        if (sections[index].description == form.description) {
+          const subject: Subject = { description: form.description };
+          sections[index].subjects.push(subject);
+          setShowSnackBar(true);
+          setSnackBarMessage('Item cadastrado com sucesso');
           added = true;
         }
       }
       if (!added) {
-        throw Error('Dia Da Senana Não Encontrado');
+        throw Error('Sessão Não Encontrado');
       }
     } catch (error) {
       alert(error);
     }
   };
+
   return (
     <Container>
-      <WeekDashboard
-        onItemClick={(item: any) => onWeekDashboardItemClick(item)}
-        items={daysOfWeek}
+      <SectionDashbaord
+        onItemClick={(item: any) => onSectionDashbaordItemClick(item)}
+        items={sections}
       />
       <Fab
         sx={{
@@ -109,19 +116,19 @@ export default function Home() {
         color='primary'
         aria-label='add'
         variant='extended'
-        onClick={() => setOpendialog(true)}
+        onClick={() => setOpenCreateSubjecDialog(true)}
       >
         <AddIcon />
       </Fab>
       <CreateSubjectDialog
-        open={openDialog}
+        open={openOpenCreateSubjecDialog}
         onCreate={(form: FormType) => onCreateSubject(form)}
-        setOpen={(value) => setOpendialog(value)}
+        setOpen={(value) => setOpenCreateSubjecDialog(value)}
       />
       <SnackBar
-        active={showSnack}
-        setActive={() => setShowSnack(false)}
-        message={snackMessage}
+        active={showSnackBar}
+        setActive={() => setShowSnackBar(false)}
+        message={snackBarMessage}
       />
     </Container>
   );

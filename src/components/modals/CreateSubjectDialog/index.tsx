@@ -4,10 +4,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Box,
   DialogTitle,
   TextField,
-  InputLabel,
 } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,25 +14,22 @@ import Chip from '@mui/material/Chip';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-const daysWeek = [
-  'Segunda',
-  'Terça',
-  'Quarta',
-  'Quinta',
-  'Sexta',
-  'Sábado',
-  'Domingo',
-];
+const selectList: Section[] = [];
 
 type CreateSubjectDialogProp = {
   open: boolean;
   setOpen: (value: boolean) => void;
-  onCreate: (form: FormInputs) => void;
+  onCreate: (form: FormData) => void;
 };
 
-type FormInputs = {
-  label: string;
-  weekDay: string;
+type FormData = {
+  description: string;
+  sectionId: string;
+};
+
+type Section = {
+  sectionId: string;
+  description: string;
 };
 
 const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
@@ -42,25 +37,25 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
   setOpen,
   onCreate,
 }) => {
-  const [weekDay, setWeekDay] = useState('');
+  const [sectionId, seSectionId] = useState('');
   const [label, setLabel] = useState('');
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({ mode: 'onChange' });
+  } = useForm<FormData>({ mode: 'onChange' });
 
-  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    const form: FormInputs = {
-      label: data.label,
-      weekDay: data.weekDay,
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const form: FormData = {
+      description: data.description,
+      sectionId: data.sectionId,
     };
     onCreate(form);
   };
 
   useEffect(() => {
-    setWeekDay('');
+    seSectionId('');
     setLabel('');
   }, [open]);
 
@@ -72,7 +67,7 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <TextField
-            {...register('label', {
+            {...register('description', {
               required: 'Campo Obrigatório',
             })}
             value={label}
@@ -87,17 +82,17 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
           />
           <FormControl fullWidth required>
             <Select
-              {...register('weekDay', {
+              {...register('sectionId', {
                 required: 'Campo Obrigatório',
               })}
-              value={weekDay}
-              onChange={(e) => setWeekDay(e.target.value)}
+              value={sectionId}
+              onChange={(e) => seSectionId(e.target.value)}
               placeholder='Dia'
               inputProps={{ 'aria-label': 'Without label' }}
             >
-              {daysWeek.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
+              {selectList.map((item) => (
+                <MenuItem key={item.sectionId} value={item.sectionId}>
+                  {item.description}
                 </MenuItem>
               ))}
             </Select>

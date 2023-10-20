@@ -1,21 +1,21 @@
 import React from 'react';
 import { Paper, Typography } from '@mui/material';
 import Chip from '@mui/material/Chip';
-import { WeekDashboardContainer } from './style';
+import { SectionDashbaordContainer } from './style';
 
-type WeekDashboardProps = {
-  items: DaysOfWeekProps[];
+type SectionDashbaordProps = {
+  items: SectionProps[];
   onItemClick?: (item: Subject) => void;
 };
-type DaysOfWeekProps = {
+type SectionProps = {
   bgColor: string;
-  label: string;
+  description: string;
   subjects: Subject[];
 };
 type Subject = {
   description: string;
 };
-const WeekDashboard: React.FC<WeekDashboardProps> = ({
+const SectionDashbaord: React.FC<SectionDashbaordProps> = ({
   items,
   onItemClick,
 }) => {
@@ -25,14 +25,14 @@ const WeekDashboard: React.FC<WeekDashboardProps> = ({
     }
   };
   return (
-    <WeekDashboardContainer>
+    <SectionDashbaordContainer>
       {items.map((day, indexDay) => (
         <Paper key={indexDay} style={{ width: '14%', margin: '0px' }}>
           <Typography
             align='center'
             style={{ padding: '16px', background: day.bgColor, color: '#fff' }}
           >
-            {day.label}
+            {day.description}
           </Typography>
           {day.subjects.map((subject, indexSubject) => (
             <div
@@ -59,8 +59,8 @@ const WeekDashboard: React.FC<WeekDashboardProps> = ({
           ))}
         </Paper>
       ))}
-    </WeekDashboardContainer>
+    </SectionDashbaordContainer>
   );
 };
 
-export default WeekDashboard;
+export default SectionDashbaord;

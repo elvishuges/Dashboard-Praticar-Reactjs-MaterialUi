@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import { Container } from './style';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
 import { Link, useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Stack } from '@mui/material';
 import * as auth from './../../services/auth';
-import { useAuth } from '../../hooks/auth';
 
 type FormInputs = {
+  username: string;
   email: string;
   password: string;
 };
 
-export default function Login() {
+export default function Register() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormInputs>({ mode: 'onBlur' });
 
-  const navigate = useNavigate();
-  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
@@ -29,14 +26,13 @@ export default function Login() {
       setIsLoading(true);
       setAlertMessage('');
 
-      const response = await auth.login({
+      const response = await auth.register({
+        username: data.username,
         email: data.email,
         password: data.password,
       });
 
-      login(response.data);
-
-      navigate('/');
+      setAlertMessage(response.data.message);
     } catch (error: any) {
       console.log('error', error);
       setAlertMessage(error.response.data.message);
@@ -47,7 +43,7 @@ export default function Login() {
 
   return (
     <Container>
-      <h2>Login</h2>
+      <h2>Register</h2>
       <Box
         m={1} //margin
         display='flex'
@@ -55,6 +51,16 @@ export default function Login() {
         alignItems='flex-start'
       ></Box>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <TextField
+          type='username'
+          variant='outlined'
+          color='secondary'
+          label='Nome'
+          {...register('username', { required: true })}
+          required
+          fullWidth
+          sx={{ mb: 2 }}
+        />
         <TextField
           type='email'
           variant='outlined'
@@ -83,12 +89,12 @@ export default function Login() {
             color='secondary'
             type='submit'
           >
-            Login
+            Cadastrar
           </Button>
         </Box>
       </form>
       <small>
-        Não possui uma conta? <Link to='/register'>Cadastro</Link>
+        Já possui uma conta? <Link to='/login'>Login</Link>
       </small>
     </Container>
   );

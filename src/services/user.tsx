@@ -1,48 +1,6 @@
 import api from '../services/api';
 
-export async function createRoom(
-  userId: string,
-  topicId: string,
-  description: string,
-  meetLink: string,
-  date: string
-): Promise<any> {
-  const response = await api.post<any>('/room', {
-    userId,
-    topicId,
-    description,
-    meetLink,
-    date,
-  });
-  return response.data;
-}
-
-export async function updateRoom(
-  roomId: string,
-  userId: string,
-  topicId: string,
-  description: string,
-  meetLink: string,
-  date: string
-): Promise<any> {
-  const response = await api.put<any>(`/room/${roomId}`, {
-    userId,
-    topicId,
-    description,
-    meetLink,
-    date,
-  });
-  return response.data;
-}
-export async function getAllRoom(): Promise<any> {
-  const response = await api.get<any>('/room');
-  return response.data;
-}
-export async function getRoomById(id: string): Promise<any> {
-  const response = await api.get<any>(`/room/${id}`);
-  return response.data;
-}
-export async function getAllTopic(): Promise<any> {
-  const response = await api.get<any>('/topic');
+export async function getAllSection(): Promise<any> {
+  const response = await api.get<any>('/sections');
   return response.data;
 }
