@@ -2,16 +2,13 @@ import React from 'react';
 import { Paper, Typography } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import { SectionDashbaordContainer } from './style';
+import { SectionDTO } from '../../types/dto/SectionDTO';
 
 type SectionDashbaordProps = {
-  items: SectionProps[];
+  items: SectionDTO[];
   onItemClick?: (item: Subject) => void;
 };
-type SectionProps = {
-  bgColor: string;
-  description: string;
-  subjects: Subject[];
-};
+
 type Subject = {
   description: string;
 };
@@ -24,17 +21,21 @@ const SectionDashbaord: React.FC<SectionDashbaordProps> = ({
       onItemClick(item);
     }
   };
+
   return (
     <SectionDashbaordContainer>
-      {items.map((day, indexDay) => (
-        <Paper key={indexDay} style={{ width: '14%', margin: '0px' }}>
+      {items.map((section, sectionIndex) => (
+        <Paper key={sectionIndex} style={{ width: '14%', margin: '0px' }}>
           <Typography
             align='center'
-            style={{ padding: '16px', background: day.bgColor, color: '#fff' }}
+            style={{
+              padding: '16px',
+              color: '#8f7c7c',
+            }}
           >
-            {day.description}
+            {section.description}
           </Typography>
-          {day.subjects.map((subject, indexSubject) => (
+          {section.subjects.map((subject, indexSubject) => (
             <div
               key={indexSubject}
               onClick={() => onChipClick(subject)}

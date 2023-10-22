@@ -12,7 +12,7 @@ function AppRoutes() {
     <Routes>
       <Route element={<PrivateRoute />}>
         <Route path='/' element={<Home />} />
-        <Route path='/subject-details/' element={<SubjectDetails />} />
+        <Route path='/subject-details/:id' element={<SubjectDetails />} />
       </Route>
       <Route
         path='/login'

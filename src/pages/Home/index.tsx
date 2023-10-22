@@ -9,103 +9,51 @@ import CreateSubjectDialog from '../../components/modals/CreateSubjectDialog';
 import SnackBar from '../../components/utils/SnackBar';
 
 import * as user from './../../services/user';
+import { SectionDTO } from '../../types/dto/SectionDTO';
 type FormType = {
   description: string;
   sectionId: string;
 };
 
-type Section = {
-  bgColor: string;
-  description: string;
-  subjects: Subject[];
-};
 type Subject = {
   description: string;
+  id: string;
 };
-const sections: Section[] = [
-  {
-    description: 'Segunda',
-    bgColor: '#034485',
-    subjects: [],
-  },
-  {
-    description: 'Terça',
-    bgColor: '#D1382E',
-    subjects: [],
-  },
-  {
-    description: 'Quarta',
-    bgColor: '#13599E',
-    subjects: [],
-  },
-  {
-    description: 'Quinta',
-    bgColor: '#1510DE',
-    subjects: [],
-  },
-
-  {
-    description: 'Domingo',
-    bgColor: 'red',
-    subjects: [],
-  },
-];
 
 export default function Home() {
   const navigate = useNavigate();
   const [openOpenCreateSubjecDialog, setOpenCreateSubjecDialog] =
     useState(false);
   const [showSnackBar, setShowSnackBar] = useState(false);
-  const [sectionsList, setSectionList] = useState([]);
+  const [sectionsList, setSectionList] = useState<SectionDTO[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
 
   const onCreateSubject = (form: FormType) => {
-    addSubjectInSection(form);
     setOpenCreateSubjecDialog(false);
   };
 
-  const onSectionDashbaordItemClick = (item: any) => {
-    navigate('subject-details');
+  const onSectionDashbaordItemClick = (item: Subject) => {
+    console.log('item', item);
+
+    navigate(`subject-details/${item.id}`);
   };
 
   const fetchData = useCallback(async () => {
-    const response = await user.getAllSection();
+    type ApiReturnType = { data: SectionDTO[] };
+    const { data }: ApiReturnType = await user.getAllSection();
 
-    setSectionList(response.data);
+    setSectionList(data);
   }, []);
 
-  // the useEffect is only there to call `fetchData` at the right time
   useEffect(() => {
-    fetchData()
-      // make sure to catch any error
-      .catch(console.error);
-  }, [fetchData]);
-
-  const addSubjectInSection = (form: FormType) => {
-    let added = false;
-    try {
-      for (let index = 0; index < sections.length; index++) {
-        if (sections[index].description == form.description) {
-          const subject: Subject = { description: form.description };
-          sections[index].subjects.push(subject);
-          setShowSnackBar(true);
-          setSnackBarMessage('Item cadastrado com sucesso');
-          added = true;
-        }
-      }
-      if (!added) {
-        throw Error('Sessão Não Encontrado');
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
+    fetchData().catch(console.error);
+  }, []);
 
   return (
     <Container>
       <SectionDashbaord
         onItemClick={(item: any) => onSectionDashbaordItemClick(item)}
-        items={sections}
+        items={sectionsList}
       />
       <Fab
         sx={{

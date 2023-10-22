@@ -4,5 +4,5 @@ import { UserData } from './UserDTO';
 export type SectionDTO = {
   id: String;
   description: String;
-  subjects: SubjectDTO;
+  subjects: SubjectDTO[];
 };
