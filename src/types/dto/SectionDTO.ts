@@ -2,7 +2,7 @@ import { SubjectDTO } from './SubjectDTO';
 import { UserData } from './UserDTO';
 
 export type SectionDTO = {
-  id: String;
-  description: String;
+  id: string;
+  description: string;
   subjects: SubjectDTO[];
 };

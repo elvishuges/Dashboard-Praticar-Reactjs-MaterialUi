@@ -39,7 +39,7 @@ export default function Login() {
       navigate('/');
     } catch (error: any) {
       console.log('error', error);
-      setAlertMessage(error.response.data.message);
+      setAlertMessage(error?.response?.data?.message);
     } finally {
       setIsLoading(false);
     }

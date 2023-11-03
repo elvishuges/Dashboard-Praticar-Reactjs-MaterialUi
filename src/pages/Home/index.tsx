@@ -10,14 +10,15 @@ import SnackBar from '../../components/utils/SnackBar';
 
 import * as user from './../../services/user';
 import { SectionDTO } from '../../types/dto/SectionDTO';
+import { log } from 'util';
 type FormType = {
   description: string;
   sectionId: string;
 };
 
 type Subject = {
-  description: string;
-  id: string;
+  description: String;
+  id: String;
 };
 
 export default function Home() {
@@ -28,20 +29,34 @@ export default function Home() {
   const [sectionsList, setSectionList] = useState<SectionDTO[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
 
-  const onCreateSubject = (form: FormType) => {
+  const onCreateSubject = async (form: FormType) => {
     setOpenCreateSubjecDialog(false);
+    type ApiReturnType = { data: SectionDTO };
+    const { data }: ApiReturnType = await user.createSubject(form);
+    console.log('data', data);
+    addSubjectToSection(data, form);
+  };
+
+  const addSubjectToSection = (subject: SectionDTO, form: FormType) => {
+    console.log('sectionsList', sectionsList, form);
+
+    for (let index = 0; index < sectionsList.length; index++) {
+      const section = sectionsList[index];
+      if (section.id == form.sectionId) {
+        sectionsList[index].subjects.push(subject);
+        const newArray = [...sectionsList]; // Usando spread operator para criar um novo array com o item adicionado
+        setSectionList(newArray); // Atualizando o estado com o novo array
+      }
+    }
   };
 
   const onSectionDashbaordItemClick = (item: Subject) => {
-    console.log('item', item);
-
     navigate(`subject-details/${item.id}`);
   };
 
   const fetchData = useCallback(async () => {
     type ApiReturnType = { data: SectionDTO[] };
     const { data }: ApiReturnType = await user.getAllSection();
-
     setSectionList(data);
   }, []);
 

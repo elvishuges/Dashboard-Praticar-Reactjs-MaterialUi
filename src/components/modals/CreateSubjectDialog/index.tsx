@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -9,12 +9,11 @@ import {
 } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Chip from '@mui/material/Chip';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-const selectList: Section[] = [];
+import * as user from './../../../services/user';
+import { SectionDTO } from '../../../types/dto/SectionDTO';
 
 type CreateSubjectDialogProp = {
   open: boolean;
@@ -27,11 +26,6 @@ type FormData = {
   sectionId: string;
 };
 
-type Section = {
-  sectionId: string;
-  description: string;
-};
-
 const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
   open,
   setOpen,
@@ -39,6 +33,7 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
 }) => {
   const [sectionId, seSectionId] = useState('');
   const [label, setLabel] = useState('');
+  const [selectItems, setSelectItems] = useState<Array<SectionDTO>>([]);
 
   const {
     register,
@@ -54,7 +49,14 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
     onCreate(form);
   };
 
+  const fetchSubjects = useCallback(async () => {
+    type ApiReturnType = { data: SectionDTO[] };
+    const { data }: ApiReturnType = await user.getAllSectionDescription();
+    setSelectItems(data);
+  }, []);
+
   useEffect(() => {
+    fetchSubjects().catch(console.error);
     seSectionId('');
     setLabel('');
   }, [open]);
@@ -90,8 +92,8 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProp> = ({
               placeholder='Dia'
               inputProps={{ 'aria-label': 'Without label' }}
             >
-              {selectList.map((item) => (
-                <MenuItem key={item.sectionId} value={item.sectionId}>
+              {selectItems.map((item: any) => (
+                <MenuItem key={item.id} value={item.id}>
                   {item.description}
                 </MenuItem>
               ))}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import { SectionDashbaordContainer } from './style';
 import { SectionDTO } from '../../types/dto/SectionDTO';
@@ -30,34 +30,46 @@ const SectionDashbaord: React.FC<SectionDashbaordProps> = ({
             align='center'
             style={{
               padding: '16px',
-              color: '#8f7c7c',
+              background: '#24242424',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}
           >
             {section.description}
           </Typography>
-          {section.subjects.map((subject, indexSubject) => (
-            <div
-              key={indexSubject}
-              onClick={() => onChipClick(subject)}
-              style={{
-                width: 'auto',
-                marginTop: 10,
-                marginInline: 10,
-                cursor: 'pointer',
-              }}
-            >
-              <Chip
-                sx={{
-                  'height': 'auto',
-                  '& .MuiChip-label': {
-                    whiteSpace: 'normal',
-                    margin: 1,
-                  },
-                }}
-                label={subject.description}
-              />
-            </div>
-          ))}
+          <Paper
+            style={{
+              height: '100%',
+              overflowY: 'scroll',
+              scrollbarWidth: 'none',
+            }}
+          >
+            {section.subjects &&
+              section.subjects.map((subject, indexSubject) => (
+                <div
+                  key={indexSubject}
+                  onClick={() => onChipClick(subject)}
+                  style={{
+                    width: 'auto',
+                    marginTop: 10,
+                    marginInline: 10,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Chip
+                    sx={{
+                      'height': 'auto',
+                      '& .MuiChip-label': {
+                        whiteSpace: 'normal',
+                        margin: 1,
+                      },
+                    }}
+                    label={subject.description}
+                  />
+                </div>
+              ))}
+          </Paper>
         </Paper>
       ))}
     </SectionDashbaordContainer>
