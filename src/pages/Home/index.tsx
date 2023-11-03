@@ -31,21 +31,22 @@ export default function Home() {
 
   const onCreateSubject = async (form: FormType) => {
     setOpenCreateSubjecDialog(false);
-    type ApiReturnType = { data: SectionDTO };
-    const { data }: ApiReturnType = await user.createSubject(form);
-    console.log('data', data);
-    addSubjectToSection(data, form);
+    try {
+      type ApiReturnType = { data: SectionDTO };
+      const { data }: ApiReturnType = await user.createSubject(form);
+      addSubjectToSection(data, form);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   const addSubjectToSection = (subject: SectionDTO, form: FormType) => {
-    console.log('sectionsList', sectionsList, form);
-
     for (let index = 0; index < sectionsList.length; index++) {
       const section = sectionsList[index];
       if (section.id == form.sectionId) {
         sectionsList[index].subjects.push(subject);
-        const newArray = [...sectionsList]; // Usando spread operator para criar um novo array com o item adicionado
-        setSectionList(newArray); // Atualizando o estado com o novo array
+        const newArray = [...sectionsList];
+        setSectionList(newArray);
       }
     }
   };
