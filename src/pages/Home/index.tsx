@@ -30,6 +30,16 @@ export default function Home() {
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [sectonIdToCreate, setSectonIdToCreate] = useState('');
 
+  const fetchData = useCallback(async () => {
+    type ApiReturnType = { data: SectionDTO[] };
+    const { data }: ApiReturnType = await user.getMySections();
+    setSectionList(data);
+  }, []);
+
+  useEffect(() => {
+    fetchData().catch(console.error);
+  }, []);
+
   const createSubject = async (
     subjectDescription: string,
     sectionId: string
@@ -42,7 +52,7 @@ export default function Home() {
       };
       const { data }: ApiReturnType = await user.createSubject(payload);
       setOpenCreateSubjecDialog(false);
-      addSubjectToSection(data);
+      addSubjectToSectionDashboard(data);
       setSectonIdToCreate('');
     } catch (error) {
       console.log('error', error);
@@ -50,11 +60,10 @@ export default function Home() {
   };
   const createSection = async (sectionDescription: string) => {
     try {
-      type ApiReturnType = { data: SubjectDTO };
       const payload = {
         description: sectionDescription,
       };
-      const { data }: ApiReturnType = await user.createSection(payload);
+      await user.createSection(payload);
       setOpenCreateSubjecDialog(false);
       fetchData();
     } catch (error) {
@@ -62,7 +71,7 @@ export default function Home() {
     }
   };
 
-  const addSubjectToSection = (subject: SubjectDTO) => {
+  const addSubjectToSectionDashboard = (subject: SubjectDTO) => {
     for (let index = 0; index < sectionsList.length; index++) {
       const section = sectionsList[index];
       if (section.id == sectonIdToCreate) {
@@ -87,16 +96,6 @@ export default function Home() {
     setSectonIdToCreate(sectionId);
     setOpenCreateSubjecDialog(true);
   };
-
-  const fetchData = useCallback(async () => {
-    type ApiReturnType = { data: SectionDTO[] };
-    const { data }: ApiReturnType = await user.getMySections();
-    setSectionList(data);
-  }, []);
-
-  useEffect(() => {
-    fetchData().catch(console.error);
-  }, []);
 
   return (
     <Container>
