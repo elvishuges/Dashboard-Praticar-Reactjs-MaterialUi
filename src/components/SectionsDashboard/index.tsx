@@ -3,10 +3,12 @@ import { Box, Paper, Typography } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import { SectionDashbaordContainer } from './style';
 import { SectionDTO } from '../../types/dto/SectionDTO';
+import CreateSubjectCard from '../CreateSubjectCard';
 
 type SectionDashbaordProps = {
   items: SectionDTO[];
   onItemClick?: (item: Subject) => void;
+  createSubjectClick?: (sectionId: string) => void;
 };
 
 type Subject = {
@@ -15,10 +17,18 @@ type Subject = {
 const SectionDashbaord: React.FC<SectionDashbaordProps> = ({
   items,
   onItemClick,
+  createSubjectClick,
 }) => {
   const onChipClick = (item: Subject) => {
     if (onItemClick) {
       onItemClick(item);
+    }
+  };
+  const createSubject = (sectionID: string) => {
+    console.log('aqui');
+
+    if (createSubjectClick) {
+      createSubjectClick(sectionID);
     }
   };
 
@@ -38,6 +48,7 @@ const SectionDashbaord: React.FC<SectionDashbaordProps> = ({
           >
             {section.description}
           </Typography>
+          <CreateSubjectCard onClick={() => createSubject(section.id)} />
           <Paper
             style={{
               height: '100%',
