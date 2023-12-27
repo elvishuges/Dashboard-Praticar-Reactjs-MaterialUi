@@ -6,7 +6,7 @@ import SectionDashbaord from '../../components/SectionsDashboard';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SimpleInputDialog from '../../components/modals/SimpleInputDialog';
-import SnackBar from '../../components/utils/SnackBar';
+import SnackBar from '../../components/utils/SnackBar/SnackBar';
 
 import * as user from './../../services/user';
 import { SectionDTO } from '../../types/dto/SectionDTO';
@@ -25,6 +25,7 @@ type Subject = {
 export default function Home() {
   const navigate = useNavigate();
   const [openCreateSubjecDialog, setOpenCreateSubjecDialog] = useState(false);
+  const [titleCreateSubjectDialog, setTitleCreateSubjectDialog] = useState('');
   const [showSnackBar, setShowSnackBar] = useState(false);
   const [sectionsList, setSectionList] = useState<SectionDTO[]>([]);
   const [snackBarMessage, setSnackBarMessage] = useState('');
@@ -94,6 +95,13 @@ export default function Home() {
   };
   const onCreateSubjectClick = (sectionId: string) => {
     setSectonIdToCreate(sectionId);
+    const section = sectionsList.find((e) => e.id == sectionId);
+    const dialogTitle = `Criar Item para Sessão ${section?.description}`;
+    setTitleCreateSubjectDialog(dialogTitle);
+    setOpenCreateSubjecDialog(true);
+  };
+  const onCreateSectionClick = () => {
+    setTitleCreateSubjectDialog('Criar  Sessão');
     setOpenCreateSubjecDialog(true);
   };
 
@@ -114,11 +122,12 @@ export default function Home() {
         }}
         aria-label='add'
         variant='extended'
-        onClick={() => setOpenCreateSubjecDialog(true)}
+        onClick={() => onCreateSectionClick()}
       >
         <AddIcon />
       </Fab>
       <SimpleInputDialog
+        title={titleCreateSubjectDialog}
         open={openCreateSubjecDialog}
         onCreate={(inputText: string) => onCreateDialogClick(inputText)}
         setOpen={(value) => setOpenCreateSubjecDialog(value)}

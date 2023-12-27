@@ -7,18 +7,14 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
-import * as user from '../../../services/user';
-import { SectionDTO } from '../../../types/dto/SectionDTO';
 
 type SimpleInputDialogProp = {
   open: boolean;
   setOpen: (value: boolean) => void;
   onCreate: (inputText: string) => void;
+  title: string;
+  inputValue?: string;
 };
 
 type FormData = {
@@ -29,10 +25,11 @@ const SimpleInputDialog: React.FC<SimpleInputDialogProp> = ({
   open,
   setOpen,
   onCreate,
+  title,
+  inputValue,
 }) => {
   const [sectionId, seSectionId] = useState('');
   const [label, setLabel] = useState('');
-  const [selectItems, setSelectItems] = useState<Array<SectionDTO>>([]);
 
   const {
     register,
@@ -47,24 +44,16 @@ const SimpleInputDialog: React.FC<SimpleInputDialogProp> = ({
     onCreate(form.description);
   };
 
-  const fetchSubjects = async () => {
-    type ApiReturnType = { data: SectionDTO[] };
-    const { data }: ApiReturnType = await user.getMySectionsDescription();
-    setSelectItems(data);
-  };
-
   useEffect(() => {
     if (open) {
-      fetchSubjects().catch(console.error);
-      seSectionId('');
-      setLabel('');
+      inputValue ? setLabel(inputValue) : setLabel('');
     }
   }, [open]);
 
   return (
     <Dialog fullWidth open={open}>
       <DialogTitle style={{ background: '#696b6d', color: '#fff' }}>
-        Adicionar Item
+        {title ? title : ''}
       </DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
