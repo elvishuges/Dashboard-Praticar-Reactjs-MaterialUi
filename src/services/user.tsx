@@ -27,3 +27,7 @@ export async function createSubject(payload: any): Promise<any> {
   const response = await api.post<any>(`/subject`, payload);
   return response;
 }
+export async function deleteSubjectItem(id: string): Promise<any> {
+  const response = await api.delete<any>(`/subject/${id}`);
+  return response;
+}
